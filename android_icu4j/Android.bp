@@ -200,6 +200,7 @@ java_sdk_library {
     // the API will be checked for compatibility against the latest released
     // version of the API.
     dist_stem: "runtime-i18n",
+    dist_group: "android",
 }
 
 // Generates stub source files for the intra-core API of the I18N module.
@@ -340,7 +341,7 @@ java_sdk_library {
     api_dir: "api/legacy_platform",
     api_only: true,
     sdk_version: "none",
-    system_modules: "legacy-art-module-platform-api-stubs-system-modules",
+    system_modules: "art-module-lib-api-stubs-system-modules",
 
     droiddoc_options: [
         "--hide-annotation libcore.api.Hide ",
@@ -371,7 +372,7 @@ java_sdk_library {
     api_dir: "api/stable_platform",
     api_only: true,
     sdk_version: "none",
-    system_modules: "stable-art-module-platform-api-stubs-system-modules",
+    system_modules: "art-module-lib-api-stubs-system-modules",
 
     droiddoc_options: [
         "--hide-annotation libcore.api.Hide ",
