@@ -15,6 +15,7 @@
 //
 
 package {
+    default_team: "trendy_team_java_core_libraries",
     default_visibility: ["//visibility:private"],
     // See: http://go/android-license-faq
     // A large-scale-change added 'default_applicable_licenses' to import
@@ -206,6 +207,9 @@ java_sdk_library {
         ":android_icu4j_repackaged_src_files",
         ":android_icu4j_public_api_files",
     ],
+    libs: [
+        "icu_aconfig_flags_lib",
+    ],
     droiddoc_options: [
         "--force-convert-to-warning-nullability-annotations +*:-android.*:+android.icu.*:-dalvik.* ",
     ],
@@ -244,6 +248,9 @@ java_sdk_library {
     // version of the API.
     dist_stem: "runtime-i18n",
     dist_group: "android",
+    aconfig_declarations: [
+        "icu_aconfig_flags",
+    ],
 }
 
 // Generates stub source files for the intra-core API of the I18N module.
@@ -482,31 +489,4 @@ java_test {
             "-Xep:ComparableType:WARN",
         ],
     },
-}
-
-java_api_contribution {
-    name: "i18n-intra-core-stubs",
-    api_surface: "intra-core",
-    api_file: "api/intra/current.txt",
-    visibility: [
-        "//build/orchestrator/apis",
-    ],
-}
-
-java_api_contribution {
-    name: "i18n-public-stubs",
-    api_surface: "public",
-    api_file: "api/public/current.txt",
-    visibility: [
-        "//build/orchestrator/apis",
-    ],
-}
-
-java_api_contribution {
-    name: "i18n-module-lib-stubs",
-    api_surface: "module-lib",
-    api_file: "api/stable_platform/current.txt",
-    visibility: [
-        "//build/orchestrator/apis",
-    ],
 }
