@@ -99,7 +99,6 @@ cc_library_shared {
         "//external/sqlite:__subpackages__",
         "//frameworks/av/media/libmedia",
         "//frameworks/base/ravenwood:__subpackages__",
-        "//vendor:__subpackages__",
     ],
 }
 
