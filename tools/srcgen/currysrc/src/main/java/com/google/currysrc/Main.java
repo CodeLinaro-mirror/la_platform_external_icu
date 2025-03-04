@@ -23,7 +23,6 @@ import com.google.currysrc.api.process.Reporter;
 import com.google.currysrc.api.process.Rule;
 
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
@@ -303,10 +302,8 @@ public final class Main {
 
       CompilationUnit cu = (CompilationUnit) parser.createAST(null /* progressMonitor */);
       if (cu.getProblems().length > 0) {
-        for(IProblem problem : cu.getProblems()) {
-            System.err.println("Error parsing:" + documentId + ":" +
-                    problem.getSourceLineNumber() + ": " + problem.toString());
-        }
+        System.err.println("Error parsing:" + documentId + ": "
+                + Arrays.toString(cu.getProblems()));
         throw new RuntimeException("Unable to parse document. Stopping.");
       }
       return cu;
