@@ -1,6 +1,6 @@
 ﻿// © 2016 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html
-// Generated using tools/cldr/cldr-to-icu/build-icu-data.xml
+// Generated using tools/cldr/cldr-to-icu/
 en_KH{
     calendar{
         generic{
@@ -40,6 +40,7 @@ en_KH{
                 MMMMd{"d MMMM"}
                 MMMd{"d MMM"}
                 Md{"d/M"}
+                yyyyM{"M/y GGGGG"}
                 yyyyMEd{"E, d/M/y GGGGG"}
                 yyyyMMMEd{"E, d MMM y G"}
                 yyyyMMMd{"d MMM y G"}
@@ -97,6 +98,10 @@ en_KH{
                 }
                 y{
                     y{"y–y G"}
+                }
+                yM{
+                    M{"M/y – M/y GGGGG"}
+                    y{"M/y – M/y GGGGG"}
                 }
                 yMEd{
                     M{"E, d/M/y – E, d/M/y GGGGG"}

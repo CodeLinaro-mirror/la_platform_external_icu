@@ -21,7 +21,7 @@ import java.util.Map;
  * MessageFormat needs a successor”</a> document.</p>
  *
  * <p>MessageFormat 2.0 will be more modular and easier to port and backport.
- * It will also provide extension points via interfaces to allow users to supply new formatters and selectors without having to modify the specification.
+ * It will also provide extension points via interfaces to allow users to supply new functions without having to modify the specification.
  * ICU will eventually include support for new formatters, such as intervals, relative time, lists, measurement units, personal names, and more,
  * as well as the ability for users to supply their own custom implementations.
  * These will potentially support use cases like grammatical gender, inflection, markup regimes (such as those require for text-to-speech),
@@ -51,7 +51,7 @@ import java.util.Map;
  * &#064;Test
  * public void test() {
  *     final Locale enGb = Locale.forLanguageTag("en-GB");
- *     Map<String, Object> arguments = new HashMap<>();
+ *     Map&lt;String, Object&gt; arguments = new HashMap&lt;&gt;();
  *     arguments.put("name", "John");
  *     arguments.put("exp", new Date(2023 - 1900, 2, 27, 19, 42, 51));  // March 27, 2023, 7:42:51 PM
  *
@@ -101,7 +101,7 @@ import java.util.Map;
  *            + " 1 {{You have one notification.}}\n"
  *            + " * {{You have {$count} notifications.}}\n";
  *    final Locale enGb = Locale.forLanguageTag("en-GB");
- *    Map<String, Object> arguments = new HashMap<>();
+ *    Map&lt;String, Object&gt; arguments = new HashMap&lt;&gt;();
  *
  *    MessageFormatter mf2 = MessageFormatter.builder()
  *        .setPattern(message)
@@ -122,7 +122,7 @@ import java.util.Map;
  *
  * <h4>Built-in formatter functions</h4>
  *
- * <p>The tech preview implementation comes with formatters for numbers ({@code :number}),
+ * <p>The tech preview implementation comes with formatter functions for numbers ({@code :number}),
  * date / time ({@code :datetime}, {@code :date}, {@code :time}),
  * plural selectors ({@code :number} with options for {@code plural} and {@code ordinal} selection),
  * and general selector ({@code :string}),
@@ -130,20 +130,19 @@ import java.util.Map;
  *
  * <p>The <a target="github" href="https://github.com/unicode-org/icu/tree/main/icu4j/main/core/src/test/java/com/ibm/icu/dev/test/message2">ICU test code</a>
  * covers most features, and has examples of how to make custom placeholder formatters;
- * you can look for classes that implement {@code com.ibm.icu.message2.FormatterFactory}
+ * you can look for classes that implement {@code com.ibm.icu.message2.FunctionFactory}
  * (they are named {@code Custom*Test.java}).</p>
  *
  * <p>The complete list of valid options for each function, and how they infulence the results, can be found at
  * <a target="github" href="https://github.com/unicode-org/message-format-wg/blob/main/spec/registry.md">here</a>.<p>
  *
- * @internal ICU 72 technology preview
- * @deprecated This API is for technology preview only.
+ * @draft ICU 78
  */
-@Deprecated
 public class MessageFormatter {
     private final Locale locale;
     private final String pattern;
     private final ErrorHandlingBehavior errorHandlingBehavior;
+    private final BidiIsolation bidiIsolation;
     private final MFFunctionRegistry functionRegistry;
     private final MFDataModel.Message dataModel;
     private final MFDataModelFormatter modelFormatter;
@@ -152,6 +151,7 @@ public class MessageFormatter {
         this.locale = builder.locale;
         this.functionRegistry = builder.functionRegistry;
         this.errorHandlingBehavior = builder.errorHandlingBehavior;
+        this.bidiIsolation = builder.bidiIsolation;
         if ((builder.pattern == null && builder.dataModel == null)
                 || (builder.pattern != null && builder.dataModel != null)) {
             throw new IllegalArgumentException(
@@ -173,7 +173,7 @@ public class MessageFormatter {
                         + "Error: " + pe.getMessage() + "\n");
             }
         }
-        modelFormatter = new MFDataModelFormatter(dataModel, locale, errorHandlingBehavior, functionRegistry);
+        modelFormatter = new MFDataModelFormatter(dataModel, locale, errorHandlingBehavior, bidiIsolation, functionRegistry);
     }
 
     /**
@@ -181,10 +181,8 @@ public class MessageFormatter {
      *
      * @return the Builder.
      *
-     * @internal ICU 72 technology preview
-     * @deprecated This API is for technology preview only.
+     * @draft ICU 78
      */
-    @Deprecated
     public static Builder builder() {
         return new Builder();
     }
@@ -195,10 +193,8 @@ public class MessageFormatter {
      *
      * @return the locale.
      *
-     * @internal ICU 72 technology preview
-     * @deprecated This API is for technology preview only.
+     * @draft ICU 78
      */
-    @Deprecated
     public Locale getLocale() {
         return locale;
     }
@@ -209,12 +205,22 @@ public class MessageFormatter {
      *
      * @return the error handling behavior.
      *
-     * @internal ICU 76 technology preview
-     * @deprecated This API is for technology preview only.
+     * @draft ICU 78
      */
-    @Deprecated
     public ErrorHandlingBehavior getErrorHandlingBehavior() {
         return errorHandlingBehavior;
+    }
+
+    /**
+     * Get the {@link BidiIsolation} algorithm to use when formatting mixed
+     * message parts with mixed direction.
+     *
+     * @return the bidi isolation algorithm.
+     *
+     * @draft ICU 78
+     */
+    public BidiIsolation getBidiIsolation() {
+        return bidiIsolation;
     }
 
     /**
@@ -226,10 +232,8 @@ public class MessageFormatter {
      *
      * @return the pattern.
      *
-     * @internal ICU 72 technology preview
-     * @deprecated This API is for technology preview only.
+     * @draft ICU 78
      */
-    @Deprecated
     public String getPattern() {
         return pattern;
     }
@@ -263,10 +267,8 @@ public class MessageFormatter {
      * @throws IllegalArgumentException when something goes wrong
      *         (for example wrong argument type, or null arguments, etc.)
      *
-     * @internal ICU 72 technology preview
-     * @deprecated This API is for technology preview only.
+     * @draft ICU 78
      */
-    @Deprecated
     public String formatToString(Map<String, Object> arguments) {
         return modelFormatter.format(arguments);
     }
@@ -295,42 +297,61 @@ public class MessageFormatter {
      * depending on this setting.</p>
      *
      * <p>Used in conjunction with the
-     * {@link MessageFormatter.Builder#setErrorHandlingBehavior(ErrorHandlingBehavior)} method.</p>
+     * {@link MessageFormatter.Builder#setErrorHandlingBehavior(MessageFormatter.ErrorHandlingBehavior)} method.</p>
      *
-     * @internal ICU 76 technology preview
-     * @deprecated This API is for technology preview only.
+     * @draft ICU 78
      */
-    @Deprecated
     public static enum ErrorHandlingBehavior {
         /**
          * Suppress errors and return best-effort output.
          *
-         * @internal ICU 76 technology preview
-         * @deprecated This API is for technology preview only.
+         * @draft ICU 78
          */
-        @Deprecated
         BEST_EFFORT,
         /**
          * Signal all {@code MessageFormat} errors by throwing a {@link RuntimeException}.
          *
-         * @internal ICU 76 technology preview
-         * @deprecated This API is for technology preview only.
+         * @draft ICU 78
          */
-        @Deprecated
         STRICT
+    }
+
+    /**
+     * Determines how the mixtures of bidirectional text are converted to string.
+     *
+     * <p>They can be either ignored, or will implement the default algorithm
+     * described in the MessageFormat 2 specification.</p>
+     *
+     * <p>Used in conjunction with the
+     * {@link MessageFormatter.Builder#setBidiIsolation(MessageFormatter.BidiIsolation)} method.</p>
+     *
+     * @draft ICU 78
+     */
+    public static enum BidiIsolation {
+        /**
+         * Ignore any text direction mixture, don't introduce bidi control characters in the formatted result.
+         *
+         * @draft ICU 78
+         */
+        NONE,
+        /**
+         * Wrap direction mixtures in bidi control characters as described in the MessageFormat 2 specification.
+         *
+         * @draft ICU 78
+         */
+        DEFAULT
     }
 
     /**
      * A {@code Builder} used to build instances of {@link MessageFormatter}.
      *
-     * @internal ICU 72 technology preview
-     * @deprecated This API is for technology preview only.
+     * @draft ICU 78
      */
-    @Deprecated
     public static class Builder {
         private Locale locale = Locale.getDefault(Locale.Category.FORMAT);
         private String pattern = null;
         private ErrorHandlingBehavior errorHandlingBehavior = ErrorHandlingBehavior.BEST_EFFORT;
+        private BidiIsolation bidiIsolation = BidiIsolation.NONE;
         private MFFunctionRegistry functionRegistry = MFFunctionRegistry.builder().build();
         private MFDataModel.Message dataModel = null;
 
@@ -343,10 +364,8 @@ public class MessageFormatter {
          * @param locale the locale to set.
          * @return the builder, for fluent use.
          *
-         * @internal ICU 72 technology preview
-         * @deprecated This API is for technology preview only.
+         * @draft ICU 78
          */
-        @Deprecated
         public Builder setLocale(Locale locale) {
             this.locale = locale;
             return this;
@@ -359,10 +378,8 @@ public class MessageFormatter {
          * @param pattern the pattern to set.
          * @return the builder, for fluent use.
          *
-         * @internal ICU 72 technology preview
-         * @deprecated This API is for technology preview only.
+         * @draft ICU 78
          */
-        @Deprecated
         public Builder setPattern(String pattern) {
             this.pattern = pattern;
             this.dataModel = null;
@@ -374,15 +391,29 @@ public class MessageFormatter {
          *
          * <p>The default value is {@code ErrorHandlingBehavior.BEST_EFFORT}, trying to fallback.</p>
          *
-         * @param the error handling behavior to use.
+         * @param errorHandlingBehavior the error handling behavior to use.
          * @return the builder, for fluent use.
          *
-         * @internal ICU 76 technology preview
-         * @deprecated This API is for technology preview only.
+         * @draft ICU 78
          */
-        @Deprecated
         public Builder setErrorHandlingBehavior(ErrorHandlingBehavior errorHandlingBehavior) {
             this.errorHandlingBehavior = errorHandlingBehavior;
+            return this;
+        }
+
+        /**
+         * Sets the {@link BidiIsolation} to introduce bidi control characters / tags
+         * as described in the MessageFormat 2 specification.
+         *
+         * <p>The default value is {@code BidiIsolation.NONE}.</p>
+         *
+         * @param bidiIsolation the bidi isolation algorithm to use.
+         * @return the builder, for fluent use.
+         *
+         * @draft ICU 78
+         */
+        public Builder setBidiIsolation(BidiIsolation bidiIsolation) {
+            this.bidiIsolation = bidiIsolation;
             return this;
         }
 
@@ -429,10 +460,8 @@ public class MessageFormatter {
          *
          * @return the {@link MessageFormatter} created.
          *
-         * @internal ICU 72 technology preview
-         * @deprecated This API is for technology preview only.
+         * @draft ICU 78
          */
-        @Deprecated
         public MessageFormatter build() {
             return new MessageFormatter(this);
         }

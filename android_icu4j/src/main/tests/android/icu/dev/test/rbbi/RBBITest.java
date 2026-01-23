@@ -327,14 +327,14 @@ public class RBBITest extends CoreTestFmwk {
         rbbi.setText((CharacterIterator)null);
         if (rbbi.preceding(-1) != BreakIterator.DONE) {
             errln("RuleBasedBreakIterator.preceding(-1) was suppose to return "
-                    + "0 when the object has a fText of null.");
+                    + "DONE when the object has a fText of null.");
         }
 
         // Tests when "else if (offset < fText.getBeginIndex())" is true
         rbbi.setText("dummy");
-        if (rbbi.preceding(-1) != 0) {
+        if (rbbi.preceding(-1) != BreakIterator.DONE) {
             errln("RuleBasedBreakIterator.preceding(-1) was suppose to return "
-                    + "0 when the object has a fText of dummy.");
+                    + "DONE when the object has a fText of dummy.");
         }
     }
 
@@ -502,8 +502,8 @@ public class RBBITest extends CoreTestFmwk {
 
     static class T13512Thread extends Thread {
         private String fText;
-        public List fBoundaries;
-        public List fExpectedBoundaries;
+        public List<Integer> fBoundaries;
+        public List<Integer> fExpectedBoundaries;
 
         T13512Thread(String text) {
             fText = text;

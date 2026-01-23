@@ -65,7 +65,7 @@ public class Mf2FeaturesTest extends CoreTestFmwk {
     public void testArgumentMissing() {
         // Test to check what happens if an argument name from the placeholder is not found
         // We do what the old ICU4J MessageFormat does.
-        String message = "Hello {$name}, today is {$today :datetime year=numeric month=long day=numeric weekday=long}.";
+        String message = "Hello {$name}, today is {$today :datetime dateFields=year-month-day-weekday dateLength=long}.";
 
         TestUtils.runTestCase(new TestCase.Builder()
                 .pattern(message)
@@ -91,7 +91,7 @@ public class Mf2FeaturesTest extends CoreTestFmwk {
 
     @Test
     public void testDefaultLocale() {
-        String message = "Date: {$date :date year=numeric month=long day=numeric weekday=long}.";
+        String message = "Date: {$date :date fields=year-month-day-weekday length=long}.";
         String expectedEn = "Date: Wednesday, November 23, 2022.";
         String expectedRo = "Date: miercuri, 23 noiembrie 2022.";
         Map<String, Object> arguments = Args.of("date", TEST_DATE);
@@ -131,75 +131,75 @@ public class Mf2FeaturesTest extends CoreTestFmwk {
                 .pattern("Testing date formatting: {$date}.")
                 .locale("ro")
                 .arguments(Args.of("date", TEST_DATE))
-                .expected("Testing date formatting: 23.11.2022, 19:42.")
+                .expected("Testing date formatting: mie., 23 nov. 2022, 19:42.")
                 .build());
         // Default options
         TestUtils.runTestCase(new TestCase.Builder()
                 .pattern("Testing date formatting: {$date :datetime}.")
                 .locale("ro")
                 .arguments(Args.of("date", TEST_DATE))
-                .expected("Testing date formatting: 23.11.2022, 19:42.")
+                .expected("Testing date formatting: mie., 23 nov. 2022, 19:42.")
                 .build());
 
-        // Skeleton
         TestUtils.runTestCase(new TestCase.Builder()
-                .pattern("Testing date formatting: {$date :date year=numeric month=long day=numeric}.")
+                .pattern("Testing date formatting: {$date :date fields=year-month-day length=long}.")
                 .locale("ro-RO")
                 .arguments(Args.of("date", TEST_DATE))
                 .expected("Testing date formatting: 23 noiembrie 2022.")
                 .build());
         TestUtils.runTestCase(new TestCase.Builder()
-                .pattern("Testing date formatting: {$date :datetime hour=numeric minute=numeric}.")
+                .pattern("Testing date formatting: {$date :datetime timePrecision=minute}.")
                 .locale("ro-RO")
                 .arguments(Args.of("date", TEST_DATE))
                 .expected("Testing date formatting: 19:42.")
                 .build());
-
         TestUtils.runTestCase(new TestCase.Builder()
-                .pattern("Testing date formatting: {$date :date year=numeric month=short day=numeric}.")
+                .pattern("Testing date formatting: {$date :date fields=year-month-day length=medium}.")
                 .arguments(Args.of("date", TEST_DATE))
                 .expected("Testing date formatting: Nov 23, 2022.")
                 .build());
+
+        // Skeleton
         TestUtils.runTestCase(new TestCase.Builder()
                 .pattern("Testing date formatting: {$date :datetime icu:skeleton=yMMMdjms}.")
                 .arguments(Args.of("date", TEST_DATE))
                 .expected("Testing date formatting: Nov 23, 2022, 7:42:37\u202FPM.")
                 .build());
         TestUtils.runTestCase(new TestCase.Builder()
-                .pattern("Testing date formatting: {$date :datetime hour=numeric minute=numeric}.")
+                .pattern("Testing date formatting: {$date :datetime timePrecision=minute}.")
                 .arguments(Args.of("date", TEST_DATE))
                 .expected("Testing date formatting: 7:42\u202FPM.")
                 .build());
 
         // Style
         TestUtils.runTestCase(new TestCase.Builder()
-                .pattern("Testing date formatting: {$date :datetime dateStyle=long}.")
+                .pattern("Testing date formatting: {$date :datetime dateFields=year-month-day dateLength=long}.")
                 .arguments(Args.of("date", TEST_DATE))
                 .expected("Testing date formatting: November 23, 2022.")
                 .build());
         TestUtils.runTestCase(new TestCase.Builder()
-                .pattern("Testing date formatting: {$date :datetime dateStyle=medium}.")
+                .pattern("Testing date formatting: {$date :datetime dateFields=year-month-day dateLength=medium}.")
                 .arguments(Args.of("date", TEST_DATE))
                 .expected("Testing date formatting: Nov 23, 2022.")
                 .build());
         TestUtils.runTestCase(new TestCase.Builder()
-                .pattern("Testing date formatting: {$date :datetime dateStyle=short}.")
+                .pattern("Testing date formatting: {$date :datetime dateFields=year-month-day dateLength=short}.")
                 .arguments(Args.of("date", TEST_DATE))
-                .expected("Testing date formatting: 11/23/22.")
+                .expected("Testing date formatting: 11/23/2022.")
                 .build());
         TestUtils.runTestCase(new TestCase.Builder()
-                .pattern("Testing date formatting: {$date :datetime timeStyle=long}.")
+                .pattern("Testing date formatting: {$date :datetime timePrecision=second timeZoneStyle=short}.")
                 .arguments(Args.of("date", TEST_DATE))
                 .expected("Testing date formatting: 7:42:37\u202FPM PST.")
                 .build());
         TestUtils.runTestCase(new TestCase.Builder()
-                .pattern("Testing date formatting: {$date :datetime timeStyle=medium}.")
+                .pattern("Testing date formatting: {$date :datetime timePrecision=second}.")
                 .arguments(Args.of("date", TEST_DATE))
                 .expected("Testing date formatting: 7:42:37\u202FPM.")
                 .build());
         TestUtils.runTestCase(new TestCase.Builder()
                 .pattern(
-                "Testing date formatting: {$date :datetime timeStyle=short}.")
+                "Testing date formatting: {$date :datetime timePrecision=minute}.")
                 .arguments(Args.of("date", TEST_DATE))
                 .expected("Testing date formatting: 7:42\u202FPM.")
                 .build());
@@ -331,7 +331,7 @@ public class Mf2FeaturesTest extends CoreTestFmwk {
     public void testSpecialPluralWithDecimals() {
         String message;
         message = ".local $amount = {$count :number}\n"
-                + ".match {$amount :number}\n"
+                + ".match $amount\n"
                 + "  1 {{I have {$amount} dollar.}}\n"
                 + "  * {{I have {$amount} dollars.}}";
         TestUtils.runTestCase(new TestCase.Builder()
@@ -341,7 +341,7 @@ public class Mf2FeaturesTest extends CoreTestFmwk {
                 .expected("I have 1 dollar.")
                 .build());
         message = ".local $amount = {$count :number minimumFractionDigits=2}\n"
-                + ".match {$amount :number minimumFractionDigits=2}\n"
+                + ".match $amount\n"
                 + "  one {{I have {$amount} dollar.}}\n"
                 + "  *   {{I have {$amount} dollars.}}";
         TestUtils.runTestCase(new TestCase.Builder()
@@ -358,19 +358,20 @@ public class Mf2FeaturesTest extends CoreTestFmwk {
                 .pattern("Testing date formatting: {$date}.")
                 .locale("ro")
                 .arguments(Args.of("date", TEST_DATE))
-                .expected("Testing date formatting: 23.11.2022, 19:42.")
+                .expected("Testing date formatting: mie., 23 nov. 2022, 19:42.")
                 .build());
         TestUtils.runTestCase(new TestCase.Builder()
                 .pattern("Testing date formatting: {$date :datetime}.")
                 .locale("ro")
                 .arguments(Args.of("date", TEST_DATE))
-                .expected("Testing date formatting: 23.11.2022, 19:42.")
+                .expected("Testing date formatting: mie., 23 nov. 2022, 19:42.")
                 .build());
     }
 
     @Test
     public void testSimpleSelection() {
-        String message = ".match {$count :number}\n"
+        String message = ".input {$count :number}\n"
+                + ".match $count\n"
                 + " 1 {{You have one notification.}}\n"
                 + " * {{You have {$count} notifications.}}";
 
@@ -389,7 +390,9 @@ public class Mf2FeaturesTest extends CoreTestFmwk {
     @Test
     public void testComplexSelection() {
         String message = ""
-                + ".match {$photoCount :number} {$userGender :string}\n"
+                + ".input {$photoCount :number}\n"
+                + ".input {$userGender :string}\n"
+                + ".match $photoCount $userGender\n"
                 + " 1 masculine {{{$userName} added a new photo to his album.}}\n"
                 + " 1 feminine {{{$userName} added a new photo to her album.}}\n"
                 + " 1 * {{{$userName} added a new photo to their album.}}\n"
@@ -430,18 +433,19 @@ public class Mf2FeaturesTest extends CoreTestFmwk {
     public void testSimpleLocaleVariable() {
         TestUtils.runTestCase(new TestCase.Builder()
                 .pattern(""
-                        + ".local $exp = {$expDate :datetime year=numeric month=short day=numeric weekday=short}\n"
+                        + ".local $exp = {$expDate :datetime dateFields=year-month-day-weekday dateLength=short}\n"
                         + "{{Your tickets expire on {$exp}.}}")
                 .arguments(Args.of("count", 1, "expDate", TEST_DATE))
-                .expected("Your tickets expire on Wed, Nov 23, 2022.")
+                .expected("Your tickets expire on We, 11/23/2022.")
                 .build());
     }
 
     @Test
     public void testLocaleVariableWithSelect() {
         String message = ""
+                + ".input {$count :number}\n"
                 + ".local $exp = {$expDate :date year=numeric month=short day=numeric weekday=short}\n"
-                + ".match {$count :number}\n"
+                + ".match $count\n"
                 + " 1 {{Your ticket expires on {$exp}.}}\n"
                 + " * {{Your {$count} tickets expire on {$exp}.}}";
 

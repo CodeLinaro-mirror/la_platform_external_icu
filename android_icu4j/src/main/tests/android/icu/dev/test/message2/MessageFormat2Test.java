@@ -16,8 +16,8 @@ import org.junit.runners.JUnit4;
 
 import android.icu.dev.test.CoreTestFmwk;
 import android.icu.message2.FormattedPlaceholder;
-import android.icu.message2.Formatter;
-import android.icu.message2.FormatterFactory;
+import android.icu.message2.Function;
+import android.icu.message2.FunctionFactory;
 import android.icu.message2.MFFunctionRegistry;
 import android.icu.message2.MessageFormatter;
 import android.icu.number.FormattedNumber;
@@ -60,35 +60,10 @@ public class MessageFormat2Test extends CoreTestFmwk {
                 mf2.formatToString(Args.of("exp", expiration)));
 
         mf2 = MessageFormatter.builder()
-                .setPattern("Your card expires on {$exp :datetime year=numeric month=short day=numeric weekday=short}!")
+                .setPattern("Your card expires on {$exp :date fields=year-month-day-weekday length=medium}!")
                 .build();
         assertEquals("date format",
                 "Your card expires on Thu, Oct 27, 2022!",
-                mf2.formatToString(Args.of("exp", expiration)));
-
-        mf2 = MessageFormatter.builder()
-                .setPattern("Your card expires on {$exp :datetime dateStyle=full}!")
-                .build();
-        assertEquals("date format",
-                "Your card expires on Thursday, October 27, 2022!",
-                mf2.formatToString(Args.of("exp", expiration)));
-        mf2 = MessageFormatter.builder()
-                .setPattern("Your card expires on {$exp :datetime dateStyle=long}!")
-                .build();
-        assertEquals("date format",
-                "Your card expires on October 27, 2022!",
-                mf2.formatToString(Args.of("exp", expiration)));
-        mf2 = MessageFormatter.builder()
-                .setPattern("Your card expires on {$exp :date style=medium}!")
-                .build();
-        assertEquals("date format",
-                "Your card expires on Oct 27, 2022!",
-                mf2.formatToString(Args.of("exp", expiration)));
-        mf2 = MessageFormatter.builder()
-                .setPattern("Your card expires on {$exp :datetime dateStyle=short}!")
-                .build();
-        assertEquals("date format",
-                "Your card expires on 10/27/22!",
                 mf2.formatToString(Args.of("exp", expiration)));
 
         Calendar cal = new GregorianCalendar(2022, Calendar.OCTOBER, 27);
@@ -104,10 +79,10 @@ public class MessageFormat2Test extends CoreTestFmwk {
                 .setPattern("Your card expires on {$exp}!")
                 .build();
         assertEquals("date format",
-                "Your card expires on 10/27/22, 12:00\u202FAM!",
+                "Your card expires on Thu, Oct 27, 2022, 12:00\u202FAM!",
                 mf2.formatToString(Args.of("exp", expiration)));
         assertEquals("date format",
-                "Your card expires on 10/27/22, 12:00\u202FAM!",
+                "Your card expires on Thu, Oct 27, 2022, 12:00\u202FAM!",
                 mf2.formatToString(Args.of("exp", cal)));
 
         // Implied function based on type of the object to format
@@ -127,12 +102,75 @@ public class MessageFormat2Test extends CoreTestFmwk {
         assertEquals("date format",
                 "Your card expires on Wed, Oct 27, 1479!",
                 mf2.formatToString(Args.of("exp", calNotRegistered)));
+        
+        // Test the overrides
+        cal = new GregorianCalendar(2025, Calendar.SEPTEMBER, 23, 19, 42, 51);
+
+        mf2 = MessageFormatter.builder()
+                .setPattern("Date time: {$exp :datetime"
+                        + " dateFields=year-month-day-weekday dateLength=medium"
+                        + " timePrecision=minute}")
+                .setLocale(Locale.US)
+                .build();
+        assertEquals("date format",
+                "Date time: Tue, Sep 23, 2025, 7:42\u202FPM",
+                mf2.formatToString(Args.of("exp", cal)));
+        // Force 24h clock
+        mf2 = MessageFormatter.builder()
+                .setPattern("Date time: {$exp :datetime"
+                        + " dateFields=year-month-day-weekday dateLength=medium"
+                        + " timePrecision=minute hour12=false}")
+                .setLocale(Locale.US)
+                .build();
+        assertEquals("date format",
+                "Date time: Tue, Sep 23, 2025, 19:42",
+                mf2.formatToString(Args.of("exp", cal)));
+        // Force 12h clock
+        mf2 = MessageFormatter.builder()
+                .setPattern("Date time: {$exp :datetime"
+                        + " dateFields=year-month-day-weekday dateLength=medium"
+                        + " timePrecision=minute hour12=true}")
+                .setLocale(Locale.FRANCE)
+                .build();
+        assertEquals("date format",
+                "Date time: mar. 23 sept. 2025, 7:42\u202FPM",
+                mf2.formatToString(Args.of("exp", cal)));
+        // Force timezone
+        mf2 = MessageFormatter.builder()
+                .setPattern("Date time: {$exp :datetime"
+                        + " dateFields=year-month-day-weekday dateLength=medium"
+                        + " timePrecision=minute timeZoneStyle=long timeZone=|America/New_York|}")
+                .setLocale(Locale.US)
+                .build();
+        assertEquals("date format",
+                "Date time: Tue, Sep 23, 2025, 10:42\u202fPM Eastern Daylight Time",
+                mf2.formatToString(Args.of("exp", cal.getTime())));
+        mf2 = MessageFormatter.builder()
+                .setPattern("Date time: {$exp :datetime"
+                        + " dateFields=year-month-day-weekday dateLength=medium"
+                        + " timePrecision=minute timeZoneStyle=short timeZone=|Pacific/Honolulu|}")
+                .setLocale(Locale.US)
+                .build();
+        assertEquals("date format",
+                "Date time: Tue, Sep 23, 2025, 4:42\u202fPM HST",
+                mf2.formatToString(Args.of("exp", cal.getTime())));
+        // Force calendar
+        mf2 = MessageFormatter.builder()
+                .setPattern("Date time: {$exp :datetime"
+                        + " dateFields=year-month-day dateLength=medium"
+                        + " timePrecision=minute calendar=islamic}")
+                .setLocale(Locale.US)
+                .build();
+        assertEquals("date format",
+                "Date time: Rab. II 2, 1447 AH, 7:42\u202FPM",
+                mf2.formatToString(Args.of("exp", cal)));
     }
 
     @Test
     public void testPlural() {
         String message = ""
-                + ".match {$count :number}\n"
+                + ".input {$count :number}\n"
+                + ".match $count\n"
                 + " 1 {{You have one notification.}}\n"
                 + " * {{You have {$count} notifications.}}";
 
@@ -150,7 +188,8 @@ public class MessageFormat2Test extends CoreTestFmwk {
     @Test
     public void testPluralOrdinal() {
         String message = ""
-                + ".match {$place :number select=ordinal}\n"
+                + ".input {$place :number select=ordinal}\n"
+                + ".match $place\n"
                 + "  1  {{You got the gold medal}}\n"
                 + "  2  {{You got the silver medal}}\n"
                 + "  3  {{You got the bronze medal}}\n"
@@ -186,14 +225,14 @@ public class MessageFormat2Test extends CoreTestFmwk {
                 mf2.formatToString(Args.of("place", 15)));
     }
 
-    static class TemperatureFormatterFactory implements FormatterFactory {
+    static class TemperatureFunctionFactory implements FunctionFactory {
         int constructCount = 0;
         int formatCount = 0;
         int fFormatterCount = 0;
         int cFormatterCount = 0;
 
         @Override
-        public Formatter createFormatter(Locale locale, Map<String, Object> fixedOptions) {
+        public Function create(Locale locale, Map<String, Object> fixedOptions) {
             // Check that the formatter can only see the fixed options
             Assert.assertTrue(fixedOptions.containsKey("icu:skeleton"));
             Assert.assertFalse(fixedOptions.containsKey("icu:unit"));
@@ -203,19 +242,19 @@ public class MessageFormat2Test extends CoreTestFmwk {
                     ? NumberFormatter.forSkeleton(valSkeleton.toString()).locale(locale)
                     : NumberFormatter.withLocale(locale);
 
-            return new TemperatureFormatterImpl(nf, this);
+            return new TemperatureFunctionImpl(nf, this);
         }
 
-        static private class TemperatureFormatterImpl implements Formatter {
-            private final TemperatureFormatterFactory formatterFactory;
+        private static class TemperatureFunctionImpl implements Function {
+            private final TemperatureFunctionFactory functionFactory;
             private final LocalizedNumberFormatter nf;
-            private final Map<String, LocalizedNumberFormatter> cachedFormatters =
+            private final Map<String, LocalizedNumberFormatter> cachedFunctions =
                     new HashMap<>();
 
-            TemperatureFormatterImpl(LocalizedNumberFormatter nf, TemperatureFormatterFactory formatterFactory) {
+            TemperatureFunctionImpl(LocalizedNumberFormatter nf, TemperatureFunctionFactory functionFactory) {
                 this.nf = nf;
-                this.formatterFactory = formatterFactory;
-                this.formatterFactory.constructCount++;
+                this.functionFactory = functionFactory;
+                this.functionFactory.constructCount++;
             }
 
             @Override
@@ -228,25 +267,25 @@ public class MessageFormat2Test extends CoreTestFmwk {
                 // Check that the formatter can only see the variable options
                 Assert.assertFalse(variableOptions.containsKey("skeleton"));
                 Assert.assertTrue(variableOptions.containsKey("unit"));
-                this.formatterFactory.formatCount++;
+                this.functionFactory.formatCount++;
 
                 String unit = variableOptions.get("unit").toString();
-                LocalizedNumberFormatter realNf = cachedFormatters.get(unit);
+                LocalizedNumberFormatter realNf = cachedFunctions.get(unit);
                 if (realNf == null) {
                     switch (variableOptions.get("unit").toString()) {
                         case "C":
-                            formatterFactory.cFormatterCount++;
+                            functionFactory.cFormatterCount++;
                             realNf = nf.unit(MeasureUnit.CELSIUS);
                             break;
                         case "F":
-                            formatterFactory.fFormatterCount++;
+                            functionFactory.fFormatterCount++;
                             realNf = nf.unit(MeasureUnit.FAHRENHEIT);
                             break;
                         default:
                             realNf = nf;
                             break;
                     }
-                    cachedFormatters.put(unit, realNf);
+                    cachedFunctions.put(unit, realNf);
                 }
 
                 FormattedNumber result;
@@ -268,12 +307,12 @@ public class MessageFormat2Test extends CoreTestFmwk {
 
     @Test
     // Due to the many changes in how the variable resolution is done,
-    // it is now not possible to caching the formatters.
+    // it is now not possible to cache the formatters.
     // Might be able to bring it back, but for now it is off.
     public void testFormatterIsCreatedOnce() {
-        TemperatureFormatterFactory counter = new TemperatureFormatterFactory();
+        TemperatureFunctionFactory counter = new TemperatureFunctionFactory();
         MFFunctionRegistry registry = MFFunctionRegistry.builder()
-                .setFormatter("temp", counter)
+                .setFunction("temp", counter)
                 .build();
         String message = "Testing {$count :temp unit=$unit icu:skeleton=|.00/w|}.";
         MessageFormatter mf2 = MessageFormatter.builder()
@@ -335,40 +374,13 @@ public class MessageFormat2Test extends CoreTestFmwk {
     @Test
     public void testPluralWithOffset() {
         String message = ""
-                + ".match {$count :number icu:offset=2}\n"
-                + " 1   {{Anna}}\n"
-                + " 2   {{Anna and Bob}}\n"
-                + " one {{Anna, Bob, and {$count :number icu:offset=2} other guest}}\n"
-                + " *   {{Anna, Bob, and {$count :number icu:offset=2} other guests}}";
-        MessageFormatter mf2 = MessageFormatter.builder()
-                .setPattern(message)
-                .build();
-        assertEquals("plural with offset",
-                "Anna",
-                mf2.formatToString(Args.of("count", 1)));
-        assertEquals("plural with offset",
-                "Anna and Bob",
-                mf2.formatToString(Args.of("count", 2)));
-        assertEquals("plural with offset",
-                "Anna, Bob, and 1 other guest",
-                mf2.formatToString(Args.of("count", 3)));
-        assertEquals("plural with offset",
-                "Anna, Bob, and 2 other guests",
-                mf2.formatToString(Args.of("count", 4)));
-        assertEquals("plural with offset",
-                "Anna, Bob, and 10 other guests",
-                mf2.formatToString(Args.of("count", 12)));
-    }
-
-    @Test
-    public void testPluralWithOffsetAndLocalVar() {
-        String message = ""
-                + ".local $foo = {$count :number icu:offset=2}"
-                + ".match {$foo :number}\n" // should "inherit" the offset
-                + " 1   {{Anna}}\n"
-                + " 2   {{Anna and Bob}}\n"
-                + " one {{Anna, Bob, and {$foo} other guest}}\n"
-                + " *   {{Anna, Bob, and {$foo} other guests}}";
+                + ".input {$count :number}\n"
+                + ".local $offsetCount = {$count :offset subtract=2}\n"
+                + ".match $count $offsetCount\n"
+                + " 1 *  {{Anna}}\n"
+                + " 2 *  {{Anna and Bob}}\n"
+                + " * one {{Anna, Bob, and {$offsetCount} other guest}}\n"
+                + " * *   {{Anna, Bob, and {$offsetCount} other guests}}";
         MessageFormatter mf2 = MessageFormatter.builder()
                 .setPattern(message)
                 .build();
@@ -393,7 +405,7 @@ public class MessageFormat2Test extends CoreTestFmwk {
     public void testPluralWithOffsetAndLocalVar2() {
         String message = ""
                 + ".local $foo = {$amount :number icu:skeleton=|.00/w|}\n"
-                + ".match {$foo :number}\n" // should "inherit" the offset
+                + ".match $foo\n" // should "inherit" the offset
                 + " 1   {{Last dollar}}\n"
                 + " one {{{$foo} dollar}}\n"
                 + " *   {{{$foo} dollars}}";
@@ -415,7 +427,7 @@ public class MessageFormat2Test extends CoreTestFmwk {
     public void testPluralWithOffsetAndLocalVar2Options() {
         String message = ""
                 + ".local $foo = {$amount :number minumumFractionalDigits=2}\n"
-                + ".match {$foo :number}\n" // should "inherit" the offset
+                + ".match $foo\n" // should "inherit" the offset
                 + " 1   {{Last dollar}}\n"
                 + " one {{{$foo} dollar}}\n"
                 + " *   {{{$foo} dollars}}";
@@ -450,11 +462,13 @@ public class MessageFormat2Test extends CoreTestFmwk {
     @Test
     public void testVariableOptionsInSelector() {
         String messageVar = ""
-                + ".match {$count :number icu:offset=$delta}\n"
-                + " 1   {{A}}\n"
-                + " 2   {{A and B}}\n"
-                + " one {{A, B, and {$count :number icu:offset=$delta} more character}}\n"
-                + " *   {{A, B, and {$count :number icu:offset=$delta} more characters}}";
+                + ".input {$count :number}\n"
+                + ".local $offsetCount = {$count :offset subtract=$delta}\n"
+                + ".match $count $offsetCount\n"
+                + " 1 *  {{A}}\n"
+                + " 2 *  {{A and B}}\n"
+                + " * one {{A, B, and {$offsetCount} more character}}\n"
+                + " * *   {{A, B, and {$offsetCount} more characters}}";
         MessageFormatter mfVar = MessageFormatter.builder()
                 .setPattern(messageVar)
                 .build();
@@ -468,10 +482,12 @@ public class MessageFormat2Test extends CoreTestFmwk {
                 mfVar.formatToString(Args.of("count", 7, "delta", 2)));
 
         String messageVar2 = ""
-                + ".match {$count :number icu:offset=$delta}\n"
-                + " 1 {{Exactly 1}}\n"
-                + " 2 {{Exactly 2}}\n"
-                + " * {{Count = {$count :number icu:offset=$delta} and delta={$delta}.}}";
+                + ".input {$count :number}\n"
+                + ".local $offsetCount = {$count :offset subtract=$delta}\n"
+                + ".match $count $offsetCount\n"
+                + " 1 * {{Exactly 1}}\n"
+                + " 2 * {{Exactly 2}}\n"
+                + " * * {{Count = {$count :number icu:offset=$delta} and delta={$delta}.}}";
         MessageFormatter mfVar2 = MessageFormatter.builder()
                 .setPattern(messageVar2)
                 .build();
@@ -507,12 +523,13 @@ public class MessageFormat2Test extends CoreTestFmwk {
     @Test
     public void testVariableOptionsInSelectorWithLocalVar() {
         String messageFix = ""
-                + ".local $offCount = {$count :number icu:offset=2}"
-                + ".match {$offCount :number}\n"
-                + " 1   {{A}}\n"
-                + " 2   {{A and B}}\n"
-                + " one {{A, B, and {$offCount} more character}}\n"
-                + " *   {{A, B, and {$offCount} more characters}}";
+                + ".input {$count :integer}"
+                + ".local $offCount = {$count :offset subtract=2}"
+                + ".match $count $offCount\n"
+                + " 1 *  {{A}}\n"
+                + " 2 *  {{A and B}}\n"
+                + " * one {{A, B, and {$offCount} more character}}\n"
+                + " * *   {{A, B, and {$offCount} more characters}}";
         MessageFormatter mfFix = MessageFormatter.builder()
                 .setPattern(messageFix)
                 .build();
@@ -522,12 +539,13 @@ public class MessageFormat2Test extends CoreTestFmwk {
         assertEquals("test local vars loop", "A, B, and 5 more characters", mfFix.formatToString(Args.of("count", 7)));
 
         String messageVar = ""
-                + ".local $offCount = {$count :number icu:offset=$delta}"
-                + ".match {$offCount :number}\n"
-                + " 1   {{A}}\n"
-                + " 2   {{A and B}}\n"
-                + " one {{A, B, and {$offCount} more character}}\n"
-                + " *   {{A, B, and {$offCount} more characters}}";
+                + ".input {$count :number}"
+                + ".local $offCount = {$count :offset subtract=$delta}"
+                + ".match $count $offCount\n"
+                + " 1 *  {{A}}\n"
+                + " 2 *  {{A and B}}\n"
+                + " * one {{A, B, and {$offCount} more character}}\n"
+                + " * *   {{A, B, and {$offCount} more characters}}";
         MessageFormatter mfVar = MessageFormatter.builder()
                 .setPattern(messageVar)
                 .build();
@@ -541,11 +559,12 @@ public class MessageFormat2Test extends CoreTestFmwk {
                 mfVar.formatToString(Args.of("count", 7, "delta", 2)));
 
         String messageVar2 = ""
-                + ".local $offCount = {$count :number icu:offset=$delta}"
-                + ".match {$offCount :number}\n"
-                + " 1 {{Exactly 1}}\n"
-                + " 2 {{Exactly 2}}\n"
-                + " * {{Count = {$count}, OffCount = {$offCount}, and delta={$delta}.}}";
+                + ".input {$count :number}"
+                + ".local $offCount = {$count :offset subtract=$delta}"
+                + ".match $count $offCount\n"
+                + " 1 * {{Exactly 1}}\n"
+                + " 2 * {{Exactly 2}}\n"
+                + " * * {{Count = {$count}, OffCount = {$offCount}, and delta={$delta}.}}";
         MessageFormatter mfVar2 = MessageFormatter.builder()
                 .setPattern(messageVar2)
                 .build();
@@ -584,7 +603,7 @@ public class MessageFormat2Test extends CoreTestFmwk {
         String result;
         Map<String, Object> messageArguments = new HashMap<>();
 
-        // Check that constructing the formatter fails
+        // Check that constructing the function fails
         // if there's a syntax error
         String pattern = "{{}";
         MessageFormatter.Builder mfBuilder = MessageFormatter.builder();

@@ -962,7 +962,7 @@ public class DateFormatTest extends CoreTestFmwk {
         { "en", "Australia/Sydney", "2004-07-15T00:00:00Z", "VVVV", "Sydney Time", "Australia/Sydney" },
 
         { "en", "Europe/London", "2004-01-15T00:00:00Z", "Z", "+0000", "+0:00" },
-        { "en", "Europe/London", "2004-01-15T00:00:00Z", "ZZZZ", "GMT", "+0:00" },
+        { "en", "Europe/London", "2004-01-15T00:00:00Z", "ZZZZ", "GMT+00:00", "+0:00" },
         { "en", "Europe/London", "2004-01-15T00:00:00Z", "z", "GMT", "+0:00" },
         { "en", "Europe/London", "2004-01-15T00:00:00Z", "zzzz", "Greenwich Mean Time", "+0:00" },
         { "en", "Europe/London", "2004-07-15T00:00:00Z", "Z", "+0100", "+1:00" },
@@ -1073,8 +1073,8 @@ public class DateFormatTest extends CoreTestFmwk {
         { "de", "Australia/Sydney", "2004-07-15T00:00:00Z", "vvvv", "Ostaustralische Zeit", "Australia/Sydney" },
 
         { "de", "Europe/London", "2004-01-15T00:00:00Z", "Z", "+0000", "+0:00" },
-        { "de", "Europe/London", "2004-01-15T00:00:00Z", "ZZZZ", "GMT", "+0:00" },
-        { "de", "Europe/London", "2004-01-15T00:00:00Z", "z", "GMT", "+0:00" },
+        { "de", "Europe/London", "2004-01-15T00:00:00Z", "ZZZZ", "GMT+00:00", "+0:00" },
+        { "de", "Europe/London", "2004-01-15T00:00:00Z", "z", "GMT+0", "+0:00" },
         { "de", "Europe/London", "2004-01-15T00:00:00Z", "zzzz", "Mittlere Greenwich-Zeit", "+0:00" },
         { "de", "Europe/London", "2004-07-15T00:00:00Z", "Z", "+0100", "+1:00" },
         { "de", "Europe/London", "2004-07-15T00:00:00Z", "ZZZZ", "GMT+01:00", "+1:00" },
@@ -1177,8 +1177,8 @@ public class DateFormatTest extends CoreTestFmwk {
         { "zh", "Australia/Sydney", "2004-07-15T00:00:00Z", "vvvv", "\u6fb3\u5927\u5229\u4e9a\u4e1c\u90e8\u65f6\u95f4", "Australia/Sydney" },
 
         { "zh", "Europe/London", "2004-01-15T00:00:00Z", "Z", "+0000", "+0:00" },
-        { "zh", "Europe/London", "2004-01-15T00:00:00Z", "ZZZZ", GMT_ZH, "+0:00" },
-        { "zh", "Europe/London", "2004-01-15T00:00:00Z", "z", "GMT", "+0:00" },
+        { "zh", "Europe/London", "2004-01-15T00:00:00Z", "ZZZZ", GMT_ZH+"+00:00", "+0:00" },
+        { "zh", "Europe/London", "2004-01-15T00:00:00Z", "z", GMT_ZH+"+0", "+0:00" },
         { "zh", "Europe/London", "2004-01-15T00:00:00Z", "zzzz", "\u683C\u6797\u5C3C\u6CBB\u6807\u51C6\u65F6\u95F4", "+0:00" },
         { "zh", "Europe/London", "2004-07-15T00:00:00Z", "Z", "+0100", "+1:00" },
         { "zh", "Europe/London", "2004-07-15T00:00:00Z", "ZZZZ", GMT_ZH+"+01:00", "+1:00" },
@@ -1280,8 +1280,8 @@ public class DateFormatTest extends CoreTestFmwk {
         { "hi", "Australia/Sydney", "2004-07-15T00:00:00Z", "vvvv", "\u092a\u0942\u0930\u094d\u0935\u0940 \u0911\u0938\u094d\u091f\u094d\u0930\u0947\u0932\u093f\u092f\u093e \u0938\u092e\u092f", "Australia/Sydney" },
 
         { "hi", "Europe/London", "2004-01-15T00:00:00Z", "Z", "+0000", "+0:00" },
-        { "hi", "Europe/London", "2004-01-15T00:00:00Z", "ZZZZ", "GMT", "+0:00" },
-        { "hi", "Europe/London", "2004-01-15T00:00:00Z", "z", "GMT", "+0:00" },
+        { "hi", "Europe/London", "2004-01-15T00:00:00Z", "ZZZZ", "GMT+00:00", "+0:00" },
+        { "hi", "Europe/London", "2004-01-15T00:00:00Z", "z", "GMT+0", "+0:00" },
         { "hi", "Europe/London", "2004-01-15T00:00:00Z", "zzzz", "\u0917\u094d\u0930\u0940\u0928\u0935\u093f\u091a \u092e\u0940\u0928 \u091f\u093e\u0907\u092e", "+0:00" },
         { "hi", "Europe/London", "2004-07-15T00:00:00Z", "Z", "+0100", "+1:00" },
         { "hi", "Europe/London", "2004-07-15T00:00:00Z", "ZZZZ", "GMT+01:00", "+1:00" },
@@ -1384,8 +1384,8 @@ public class DateFormatTest extends CoreTestFmwk {
         { "bg", "Australia/Sydney", "2004-07-15T00:00:00Z", "vvvv", "\u0418\u0437\u0442\u043E\u0447\u043D\u043E\u0430\u0432\u0441\u0442\u0440\u0430\u043B\u0438\u0439\u0441\u043A\u043E \u0432\u0440\u0435\u043C\u0435", "Australia/Sydney" },
 
         { "bg", "Europe/London", "2004-01-15T00:00:00Z", "Z", "+0000", "+0:00" },
-        { "bg", "Europe/London", "2004-01-15T00:00:00Z", "ZZZZ", GMT_BG, "+0:00" },
-        { "bg", "Europe/London", "2004-01-15T00:00:00Z", "z", GMT_BG, "+0:00" },
+        { "bg", "Europe/London", "2004-01-15T00:00:00Z", "ZZZZ", GMT_BG+"+00:00", "+0:00" },
+        { "bg", "Europe/London", "2004-01-15T00:00:00Z", "z", GMT_BG+"+0", "+0:00" },
         { "bg", "Europe/London", "2004-01-15T00:00:00Z", "zzzz", "\u0421\u0440\u0435\u0434\u043d\u043e \u0433\u0440\u0438\u043d\u0443\u0438\u0447\u043a\u043e \u0432\u0440\u0435\u043c\u0435", "+0:00" },
         { "bg", "Europe/London", "2004-07-15T00:00:00Z", "Z", "+0100", "+1:00" },
         { "bg", "Europe/London", "2004-07-15T00:00:00Z", "ZZZZ", GMT_BG+"+01:00", "+1:00" },
@@ -1422,14 +1422,14 @@ public class DateFormatTest extends CoreTestFmwk {
         { "ja", "America/Los_Angeles", "2004-01-15T00:00:00Z", "Z", "-0800", "-8:00" },
         { "ja", "America/Los_Angeles", "2004-01-15T00:00:00Z", "ZZZZ", "GMT-08:00", "-8:00" },
         { "ja", "America/Los_Angeles", "2004-01-15T00:00:00Z", "z", "GMT-8", "America/Los_Angeles" },
-        { "ja", "America/Los_Angeles", "2004-01-15T00:00:00Z", "zzzz", "\u30a2\u30e1\u30ea\u30ab\u592a\u5e73\u6d0b\u6a19\u6e96\u6642", "America/Los_Angeles" },
+        { "ja", "America/Los_Angeles", "2004-01-15T00:00:00Z", "zzzz", "\u7c73\u56fd\u592a\u5e73\u6d0b\u6a19\u6e96\u6642", "America/Los_Angeles" },
         { "ja", "America/Los_Angeles", "2004-07-15T00:00:00Z", "Z", "-0700", "-7:00" },
         { "ja", "America/Los_Angeles", "2004-07-15T00:00:00Z", "ZZZZ", "GMT-07:00", "-7:00" },
         { "ja", "America/Los_Angeles", "2004-07-15T00:00:00Z", "z", "GMT-7", "America/Los_Angeles" },
-        { "ja", "America/Los_Angeles", "2004-07-15T00:00:00Z", "zzzz", "\u30a2\u30e1\u30ea\u30ab\u592a\u5e73\u6d0b\u590f\u6642\u9593", "America/Los_Angeles" },
+        { "ja", "America/Los_Angeles", "2004-07-15T00:00:00Z", "zzzz", "\u7c73\u56fd\u592a\u5e73\u6d0b\u590f\u6642\u9593", "America/Los_Angeles" },
     // icu ja.txt has exemplar city for this time zone
         { "ja", "America/Los_Angeles", "2004-07-15T00:00:00Z", "v", "\u30ED\u30B5\u30F3\u30BC\u30EB\u30B9\u6642\u9593", "America/Los_Angeles" },
-        { "ja", "America/Los_Angeles", "2004-07-15T00:00:00Z", "vvvv", "\u30A2\u30E1\u30EA\u30AB\u592A\u5E73\u6D0B\u6642\u9593", "America/Los_Angeles" },
+        { "ja", "America/Los_Angeles", "2004-07-15T00:00:00Z", "vvvv", "\u7c73\u56fd\u592a\u5e73\u6d0b\u6642\u9593", "America/Los_Angeles" },
         { "ja", "America/Los_Angeles", "2004-07-15T00:00:00Z", "VVVV", "\u30ED\u30B5\u30F3\u30BC\u30EB\u30B9\u6642\u9593", "America/Los_Angeles" },
 
         { "ja", "America/Argentina/Buenos_Aires", "2004-01-15T00:00:00Z", "Z", "-0300", "-3:00" },
@@ -1491,8 +1491,8 @@ public class DateFormatTest extends CoreTestFmwk {
         { "ja", "Australia/Sydney", "2004-07-15T00:00:00Z", "vvvv", "\u30AA\u30FC\u30B9\u30C8\u30E9\u30EA\u30A2\u6771\u90E8\u6642\u9593", "Australia/Sydney" },
 
         { "ja", "Europe/London", "2004-01-15T00:00:00Z", "Z", "+0000", "+0:00" },
-        { "ja", "Europe/London", "2004-01-15T00:00:00Z", "ZZZZ", "GMT", "+0:00" },
-        { "ja", "Europe/London", "2004-01-15T00:00:00Z", "z", "GMT", "+0:00" },
+        { "ja", "Europe/London", "2004-01-15T00:00:00Z", "ZZZZ", "GMT+00:00", "+0:00" },
+        { "ja", "Europe/London", "2004-01-15T00:00:00Z", "z", "GMT+0", "+0:00" },
         { "ja", "Europe/London", "2004-01-15T00:00:00Z", "zzzz", "\u30B0\u30EA\u30CB\u30C3\u30B8\u6A19\u6E96\u6642", "+0:00" },
         { "ja", "Europe/London", "2004-07-15T00:00:00Z", "Z", "+0100", "+1:00" },
         { "ja", "Europe/London", "2004-07-15T00:00:00Z", "ZZZZ", "GMT+01:00", "+1:00" },
@@ -1597,8 +1597,8 @@ public class DateFormatTest extends CoreTestFmwk {
         { "ti", "Australia/Sydney", "2004-07-15T00:00:00Z", "vvvv", "\u1293\u12ed \u121d\u1265\u122b\u1253\u12ca \u12a3\u12cd\u1235\u1275\u122b\u120d\u12eb \u130d\u12d8", "Australia/Sydney" },
 
         { "ti", "Europe/London", "2004-01-15T00:00:00Z", "Z", "+0000", "+0:00" },
-        { "ti", "Europe/London", "2004-01-15T00:00:00Z", "ZZZZ", "GMT", "+0:00" },
-        { "ti", "Europe/London", "2004-01-15T00:00:00Z", "z", "GMT", "+0:00" },
+        { "ti", "Europe/London", "2004-01-15T00:00:00Z", "ZZZZ", "GMT+00:00", "+0:00" },
+        { "ti", "Europe/London", "2004-01-15T00:00:00Z", "z", "GMT+0", "+0:00" },
         { "ti", "Europe/London", "2004-01-15T00:00:00Z", "zzzz", "GMT", "+0:00" },
         { "ti", "Europe/London", "2004-07-15T00:00:00Z", "Z", "+0100", "+1:00" },
         { "ti", "Europe/London", "2004-07-15T00:00:00Z", "ZZZZ", "GMT+01:00", "+1:00" },
@@ -3121,8 +3121,8 @@ public class DateFormatTest extends CoreTestFmwk {
             String CA_DATA[] = {
                 "yyyy MM dd HH:mm:ss",
 
-                "h:mm a",     "2015 01 01 10:00:00", "10:00 a.\u00A0m.",
-                "h:mm a",     "2015 01 01 22:00:00", "10:00 p.\u00A0m.",
+                "h:mm a",     "2015 01 01 10:00:00", "10:00 a.\u202Fm.",
+                "h:mm a",     "2015 01 01 22:00:00", "10:00 p.\u202Fm.",
                 "h:mm aaaaa", "2015 01 01 10:00:00", "10:00 a.\u202Fm.",
                 "h:mm aaaaa", "2015 01 01 22:00:00", "10:00 p.\u202Fm.",
             };
@@ -3536,7 +3536,7 @@ public class DateFormatTest extends CoreTestFmwk {
             int patidx = 0;
 
             while (true) {
-                Map map = acit.getAttributes();
+                Map<AttributedCharacterIterator.Attribute, Object> map = acit.getAttributes();
                 int limit = acit.getRunLimit();
                 if (map.isEmpty()) {
                     // Must be pattern literal - '~'
@@ -3547,10 +3547,10 @@ public class DateFormatTest extends CoreTestFmwk {
                         acit.next();
                     }
                 } else {
-                    Set keySet = map.keySet();
+                    Set<AttributedCharacterIterator.Attribute> keySet = map.keySet();
                     if (keySet.size() == 1) {
                         // Check the attribute
-                        Iterator keyIterator = keySet.iterator();
+                        Iterator<AttributedCharacterIterator.Attribute> keyIterator = keySet.iterator();
                         DateFormat.Field attr = (DateFormat.Field)keyIterator.next();
                         if (!DATEFORMAT_FIELDS[patidx].equals(attr)) {
                             errln("FAIL: The attribute at " + acit.getIndex() + " in patterns[" + i + "" +
@@ -3580,7 +3580,7 @@ public class DateFormatTest extends CoreTestFmwk {
 
         ChineseDateFormat cdf = new ChineseDateFormat("y'x'G-Ml-d", ULocale.US);
         acit = cdf.formatToCharacterIterator(nonLeapMonthDate);
-        Set keys = acit.getAllAttributeKeys();
+        Set<AttributedCharacterIterator.Attribute> keys = acit.getAllAttributeKeys();
         if (keys.contains(ChineseDateFormat.Field.IS_LEAP_MONTH)) {
             errln("FAIL: separate IS_LEAP_MONTH field should not be present for a Chinese calendar non-leap date"
                     + cdf.format(nonLeapMonthDate));
@@ -4747,7 +4747,7 @@ public class DateFormatTest extends CoreTestFmwk {
     @Test
     public void TestDotAndAtLeniency() {
         for (ULocale locale : Arrays.asList(ULocale.ENGLISH, ULocale.FRENCH)) {
-            List<Object[]> tests = new ArrayList();
+            List<Object[]> tests = new ArrayList<>();
 
             for (int dateStyle = DateFormat.FULL; dateStyle <= DateFormat.SHORT; ++dateStyle) {
                 DateFormat dateFormat = DateFormat.getDateInstance(dateStyle, locale);
@@ -5171,9 +5171,9 @@ public class DateFormatTest extends CoreTestFmwk {
         // For ICU 57 output of "midnight" is temporarily suppressed.
 
 //        assertEquals("hh:mm:ss BBB | 00:00:00", "12:00:00 midnight", sdf.format(k000000));
-        assertEquals("hh:mm:ss BBB | 00:00:00", "12:00:00 at night", sdf.format(k000000));
-        assertEquals("hh:mm:ss BBB | 00:00:30", "12:00:30 at night", sdf.format(k000030));
-        assertEquals("hh:mm:ss BBB | 00:30:00", "12:30:00 at night", sdf.format(k003000));
+        assertEquals("hh:mm:ss BBB | 00:00:00", "12:00:00 in the morning", sdf.format(k000000));
+        assertEquals("hh:mm:ss BBB | 00:00:30", "12:00:30 in the morning", sdf.format(k000030));
+        assertEquals("hh:mm:ss BBB | 00:30:00", "12:30:00 in the morning", sdf.format(k003000));
         assertEquals("hh:mm:ss BBB | 06:00:00", "06:00:00 in the morning", sdf.format(k060000));
         assertEquals("hh:mm:ss BBB | 12:00:00", "12:00:00 noon", sdf.format(k120000));
         assertEquals("hh:mm:ss BBB | 18:00:00", "06:00:00 in the evening", sdf.format(k180000));
@@ -5181,27 +5181,27 @@ public class DateFormatTest extends CoreTestFmwk {
         sdf.applyPattern("hh:mm BBB");
 
 //        assertEquals("hh:mm BBB | 00:00:00", "12:00 midnight", sdf.format(k000000));
-        assertEquals("hh:mm BBB | 00:00:00", "12:00 at night", sdf.format(k000000));
+        assertEquals("hh:mm BBB | 00:00:00", "12:00 in the morning", sdf.format(k000000));
 //        assertEquals("hh:mm BBB | 00:00:30", "12:00 midnight", sdf.format(k000030));
-        assertEquals("hh:mm BBB | 00:00:30", "12:00 at night", sdf.format(k000030));
-        assertEquals("hh:mm BBB | 00:30:00", "12:30 at night", sdf.format(k003000));
+        assertEquals("hh:mm BBB | 00:00:30", "12:00 in the morning", sdf.format(k000030));
+        assertEquals("hh:mm BBB | 00:30:00", "12:30 in the morning", sdf.format(k003000));
 
         sdf.applyPattern("hh BBB");
 
 //        assertEquals("hh BBB | 00:00:00", "12 midnight", sdf.format(k000000));
-        assertEquals("hh BBB | 00:00:00", "12 at night", sdf.format(k000000));
+        assertEquals("hh BBB | 00:00:00", "12 in the morning", sdf.format(k000000));
 //        assertEquals("hh BBB | 00:00:30", "12 midnight", sdf.format(k000030));
-        assertEquals("hh BBB | 00:00:30", "12 at night", sdf.format(k000030));
+        assertEquals("hh BBB | 00:00:30", "12 in the morning", sdf.format(k000030));
 //        assertEquals("hh BBB | 00:30:00", "12 midnight", sdf.format(k003000));
-        assertEquals("hh BBB | 00:30:00", "12 at night", sdf.format(k003000));
+        assertEquals("hh BBB | 00:30:00", "12 in the morning", sdf.format(k003000));
 
         // Wide
         sdf.applyPattern("hh:mm:ss BBBB");
 
 //        assertEquals("hh:mm:ss BBBB | 00:00:00", "12:00:00 midnight", sdf.format(k000000));
-        assertEquals("hh:mm:ss BBBB | 00:00:00", "12:00:00 at night", sdf.format(k000000));
-        assertEquals("hh:mm:ss BBBB | 00:00:30", "12:00:30 at night", sdf.format(k000030));
-        assertEquals("hh:mm:ss BBBB | 00:30:00", "12:30:00 at night", sdf.format(k003000));
+        assertEquals("hh:mm:ss BBBB | 00:00:00", "12:00:00 in the morning", sdf.format(k000000));
+        assertEquals("hh:mm:ss BBBB | 00:00:30", "12:00:30 in the morning", sdf.format(k000030));
+        assertEquals("hh:mm:ss BBBB | 00:30:00", "12:30:00 in the morning", sdf.format(k003000));
         assertEquals("hh:mm:ss BBBB | 06:00:00", "06:00:00 in the morning", sdf.format(k060000));
         assertEquals("hh:mm:ss BBBB | 12:00:00", "12:00:00 noon", sdf.format(k120000));
         assertEquals("hh:mm:ss BBBB | 18:00:00", "06:00:00 in the evening", sdf.format(k180000));
@@ -5209,27 +5209,27 @@ public class DateFormatTest extends CoreTestFmwk {
         sdf.applyPattern("hh:mm BBBB");
 
 //        assertEquals("hh:mm BBBB | 00:00:00", "12:00 midnight", sdf.format(k000000));
-        assertEquals("hh:mm BBBB | 00:00:00", "12:00 at night", sdf.format(k000000));
+        assertEquals("hh:mm BBBB | 00:00:00", "12:00 in the morning", sdf.format(k000000));
 //        assertEquals("hh:mm BBBB | 00:00:30", "12:00 midnight", sdf.format(k000030));
-        assertEquals("hh:mm BBBB | 00:00:30", "12:00 at night", sdf.format(k000030));
-        assertEquals("hh:mm BBBB | 00:30:00", "12:30 at night", sdf.format(k003000));
+        assertEquals("hh:mm BBBB | 00:00:30", "12:00 in the morning", sdf.format(k000030));
+        assertEquals("hh:mm BBBB | 00:30:00", "12:30 in the morning", sdf.format(k003000));
 
         sdf.applyPattern("hh BBBB");
 
 //        assertEquals("hh BBBB | 00:00:00", "12 midnight", sdf.format(k000000));
-        assertEquals("hh BBBB | 00:00:00", "12 at night", sdf.format(k000000));
+        assertEquals("hh BBBB | 00:00:00", "12 in the morning", sdf.format(k000000));
 //        assertEquals("hh BBBB | 00:00:30", "12 midnight", sdf.format(k000030));
-        assertEquals("hh BBBB | 00:00:30", "12 at night", sdf.format(k000030));
+        assertEquals("hh BBBB | 00:00:30", "12 in the morning", sdf.format(k000030));
 //        assertEquals("hh BBBB | 00:30:00", "12 midnight", sdf.format(k003000));
-        assertEquals("hh BBBB | 00:30:00", "12 at night", sdf.format(k003000));
+        assertEquals("hh BBBB | 00:30:00", "12 in the morning", sdf.format(k003000));
 
         // Narrow
         sdf.applyPattern("hh:mm:ss BBBBB");
 
 //        assertEquals("hh:mm:ss BBBBB | 00:00:00", "12:00:00 mi", sdf.format(k000000));
-        assertEquals("hh:mm:ss BBBBB | 00:00:00", "12:00:00 at night", sdf.format(k000000));
-        assertEquals("hh:mm:ss BBBBB | 00:00:30", "12:00:30 at night", sdf.format(k000030));
-        assertEquals("hh:mm:ss BBBBB | 00:30:00", "12:30:00 at night", sdf.format(k003000));
+        assertEquals("hh:mm:ss BBBBB | 00:00:00", "12:00:00 in the morning", sdf.format(k000000));
+        assertEquals("hh:mm:ss BBBBB | 00:00:30", "12:00:30 in the morning", sdf.format(k000030));
+        assertEquals("hh:mm:ss BBBBB | 00:30:00", "12:30:00 in the morning", sdf.format(k003000));
         assertEquals("hh:mm:ss BBBBB | 06:00:00", "06:00:00 in the morning", sdf.format(k060000));
         assertEquals("hh:mm:ss BBBBB | 12:00:00", "12:00:00 n", sdf.format(k120000));
         assertEquals("hh:mm:ss BBBBB | 18:00:00", "06:00:00 in the evening", sdf.format(k180000));
@@ -5237,19 +5237,19 @@ public class DateFormatTest extends CoreTestFmwk {
         sdf.applyPattern("hh:mm BBBBB");
 
 //        assertEquals("hh:mm BBBBB | 00:00:00", "12:00 mi", sdf.format(k000000));
-        assertEquals("hh:mm BBBBB | 00:00:00", "12:00 at night", sdf.format(k000000));
+        assertEquals("hh:mm BBBBB | 00:00:00", "12:00 in the morning", sdf.format(k000000));
 //        assertEquals("hh:mm BBBBB | 00:00:30", "12:00 mi", sdf.format(k000030));
-        assertEquals("hh:mm BBBBB | 00:00:30", "12:00 at night", sdf.format(k000030));
-        assertEquals("hh:mm BBBBB | 00:30:00", "12:30 at night", sdf.format(k003000));
+        assertEquals("hh:mm BBBBB | 00:00:30", "12:00 in the morning", sdf.format(k000030));
+        assertEquals("hh:mm BBBBB | 00:30:00", "12:30 in the morning", sdf.format(k003000));
 
         sdf.applyPattern("hh BBBBB");
 
 //        assertEquals("hh BBBBB | 00:00:00", "12 mi", sdf.format(k000000));
-        assertEquals("hh BBBBB | 00:00:00", "12 at night", sdf.format(k000000));
+        assertEquals("hh BBBBB | 00:00:00", "12 in the morning", sdf.format(k000000));
 //        assertEquals("hh BBBBB | 00:00:30", "12 mi", sdf.format(k000030));
-        assertEquals("hh BBBBB | 00:00:30", "12 at night", sdf.format(k000030));
+        assertEquals("hh BBBBB | 00:00:30", "12 in the morning", sdf.format(k000030));
 //        assertEquals("hh BBBBB | 00:30:00", "12 mi", sdf.format(k003000));
-        assertEquals("hh BBBBB | 00:30:00", "12 at night", sdf.format(k003000));
+        assertEquals("hh BBBBB | 00:30:00", "12 in the morning", sdf.format(k003000));
     }
 
     @Test
@@ -5308,8 +5308,8 @@ public class DateFormatTest extends CoreTestFmwk {
         sdf.applyPattern("hh:mm:ss BBBB");
 
 //        assertEquals("hh:mm:ss BBBB | 00:00:00 | en_US", "12:00:00 midnight", sdf.format(k000000));
-        assertEquals("hh:mm:ss BBBB | 00:00:00 | en_US", "12:00:00 at night", sdf.format(k000000));
-        assertEquals("hh:mm:ss BBBB | 01:00:00 | en_US", "01:00:00 at night", sdf.format(k010000));
+        assertEquals("hh:mm:ss BBBB | 00:00:00 | en_US", "12:00:00 in the morning", sdf.format(k000000));
+        assertEquals("hh:mm:ss BBBB | 01:00:00 | en_US", "01:00:00 in the morning", sdf.format(k010000));
         assertEquals("hh:mm:ss BBBB | 12:00:00 | en_US", "12:00:00 noon", sdf.format(k120000));
 
         // Locale es_CO should not fall back to es and should have a
@@ -5333,7 +5333,7 @@ public class DateFormatTest extends CoreTestFmwk {
         sdf.setTimeZone(TimeZone.GMT_ZONE);
 
         sdf.applyPattern("hh:mm:ss BBBB");
-        assertEquals("hh:mm:ss BBBB | 01:00:00 | en@calendar=buddhist", "01:00:00 at night", sdf.format(k010000));
+        assertEquals("hh:mm:ss BBBB | 01:00:00 | en@calendar=buddhist", "01:00:00 in the morning", sdf.format(k010000));
     }
 
     @Test
@@ -5360,7 +5360,7 @@ public class DateFormatTest extends CoreTestFmwk {
         sdf.applyPattern("hh:mm 'ss' BBBB");
 
 //        assertEquals("hh:mm 'ss' BBBB | 00:00:30", "12:00 ss midnight", sdf.format(k000030));
-        assertEquals("hh:mm 'ss' BBBB | 00:00:30", "12:00 ss at night", sdf.format(k000030));
+        assertEquals("hh:mm 'ss' BBBB | 00:00:30", "12:00 ss in the morning", sdf.format(k000030));
         assertEquals("hh:mm 'ss' BBBB | 06:00:30", "06:00 ss in the morning", sdf.format(k060030));
 
         // Minutes field is not present.
@@ -5373,7 +5373,7 @@ public class DateFormatTest extends CoreTestFmwk {
         sdf.applyPattern("hh 'mm ss' BBBB");
 
 //        assertEquals("hh 'mm ss' BBBB | 00:30:00", "12 mm ss midnight", sdf.format(k003000));
-        assertEquals("hh 'mm ss' BBBB | 00:30:00", "12 mm ss at night", sdf.format(k003000));
+        assertEquals("hh 'mm ss' BBBB | 00:30:00", "12 mm ss in the morning", sdf.format(k003000));
         assertEquals("hh 'mm ss' BBBB | 06:30:00", "06 mm ss in the morning", sdf.format(k063000));
 
         // Minutes and seconds fields appear after day periods.
@@ -5387,21 +5387,21 @@ public class DateFormatTest extends CoreTestFmwk {
         sdf.applyPattern("BBBB hh:mm:ss");
 
 //        assertEquals("BBBB hh:mm:ss | 00:00:00", "midnight 12:00:00", sdf.format(k000000));
-        assertEquals("BBBB hh:mm:ss | 00:00:00", "at night 12:00:00", sdf.format(k000000));
-        assertEquals("BBBB hh:mm:ss | 00:00:30", "at night 12:00:30", sdf.format(k000030));
-        assertEquals("BBBB hh:mm:ss | 00:30:00", "at night 12:30:00", sdf.format(k003000));
+        assertEquals("BBBB hh:mm:ss | 00:00:00", "in the morning 12:00:00", sdf.format(k000000));
+        assertEquals("BBBB hh:mm:ss | 00:00:30", "in the morning 12:00:30", sdf.format(k000030));
+        assertEquals("BBBB hh:mm:ss | 00:30:00", "in the morning 12:30:00", sdf.format(k003000));
 
         // Confirm applyPattern() reparses the pattern string.
         sdf.applyPattern("BBBB hh");
 //        assertEquals("BBBB hh | 00:00:30", "midnight 12", sdf.format(k000030));
-        assertEquals("BBBB hh | 00:00:30", "at night 12", sdf.format(k000030));
+        assertEquals("BBBB hh | 00:00:30", "in the morning 12", sdf.format(k000030));
 
         sdf.applyPattern("BBBB hh:mm:'ss'");
 //        assertEquals("BBBB hh:mm:'ss' | 00:00:30", "midnight 12:00:ss", sdf.format(k000030));
-        assertEquals("BBBB hh:mm:'ss' | 00:00:30", "at night 12:00:ss", sdf.format(k000030));
+        assertEquals("BBBB hh:mm:'ss' | 00:00:30", "in the morning 12:00:ss", sdf.format(k000030));
 
         sdf.applyPattern("BBBB hh:mm:ss");
-        assertEquals("BBBB hh:mm:ss | 00:00:30", "at night 12:00:30", sdf.format(k000030));
+        assertEquals("BBBB hh:mm:ss | 00:00:30", "in the morning 12:00:30", sdf.format(k000030));
     }
 
     @Test
@@ -5410,7 +5410,6 @@ public class DateFormatTest extends CoreTestFmwk {
         Date k000000 = new Date(1447372800000L);
         Date k003700 = new Date(1447375020000L);
         Date k010000 = new Date(1447376400000L);
-        Date k013000 = new Date(1447378200000L);
         Date k030000 = new Date(1447383600000L);
         Date k090000 = new Date(1447405200000L);
         Date k120000 = new Date(1447416000000L);
@@ -5421,6 +5420,7 @@ public class DateFormatTest extends CoreTestFmwk {
         Date k193000 = new Date(1447443000000L);
         Date k200000 = new Date(1447444800000L);
         Date k210000 = new Date(1447448400000L);
+        Date k223000 = new Date(1447453800000L);
 
         SimpleDateFormat sdf = new SimpleDateFormat("");
         sdf.setTimeZone(TimeZone.GMT_ZONE);
@@ -5432,13 +5432,13 @@ public class DateFormatTest extends CoreTestFmwk {
         assertEquals("yyyy-MM-dd B | 2015-11-13 noon", k120000, sdf.parse("2015-11-13 noon"));
         assertEquals("yyyy-MM-dd B | 2015-11-13 in the afternoon", k150000, sdf.parse("2015-11-13 in the afternoon"));
         assertEquals("yyyy-MM-dd B | 2015-11-13 in the evening", k193000, sdf.parse("2015-11-13 in the evening"));
-        assertEquals("yyyy-MM-dd B | 2015-11-13 at night", k013000, sdf.parse("2015-11-13 at night"));
+        assertEquals("yyyy-MM-dd B | 2015-11-13 at night", k223000, sdf.parse("2015-11-13 at night"));
 
         // If time and day period are consistent with each other then time is parsed accordingly.
         sdf.applyPattern("yyyy-MM-dd hh:mm B");
         assertEquals("yyyy-MM-dd hh:mm B | 2015-11-13 12:00 midnight", k000000, sdf.parse("2015-11-13 12:00 midnight"));
         assertEquals("yyyy-MM-dd hh:mm B | 2015-11-13 12:00 noon", k120000, sdf.parse("2015-11-13 12:00 noon"));
-        assertEquals("yyyy-MM-dd hh:mm B | 2015-11-13 01:00 at night", k010000, sdf.parse("2015-11-13 01:00 at night"));
+        assertEquals("yyyy-MM-dd hh:mm B | 2015-11-13 01:00 in the morning", k010000, sdf.parse("2015-11-13 01:00 in the morning"));
         assertEquals("yyyy-MM-dd hh:mm B | 2015-11-13 01:00 in the afternoon", k130000, sdf.parse("2015-11-13 01:00 in the afternoon"));
         assertEquals("yyyy-MM-dd hh:mm B | 2015-11-13 09:00 in the morning", k090000, sdf.parse("2015-11-13 09:00 in the morning"));
         assertEquals("yyyy-MM-dd hh:mm B | 2015-11-13 09:00 at night", k210000, sdf.parse("2015-11-13 09:00 at night"));
@@ -5474,7 +5474,7 @@ public class DateFormatTest extends CoreTestFmwk {
         sdf.applyPattern("yyyy-MM-dd HH:mm B");
         assertEquals("yyyy-MM-dd HH:mm B | 2015-11-13 12:00 midnight", k000000, sdf.parse("2015-11-13 12:00 midnight"));
         assertEquals("yyyy-MM-dd HH:mm B | 2015-11-13 12:00 noon", k120000, sdf.parse("2015-11-13 12:00 noon"));
-        assertEquals("yyyy-MM-dd HH:mm B | 2015-11-13 01:00 at night", k010000, sdf.parse("2015-11-13 01:00 at night"));
+        assertEquals("yyyy-MM-dd HH:mm B | 2015-11-13 01:00 in the morning", k010000, sdf.parse("2015-11-13 01:00 in the morning"));
         assertEquals("yyyy-MM-dd HH:mm B | 2015-11-13 01:00 in the afternoon", k130000, sdf.parse("2015-11-13 01:00 in the afternoon"));
         assertEquals("yyyy-MM-dd HH:mm B | 2015-11-13 09:00 in the morning", k090000, sdf.parse("2015-11-13 09:00 in the morning"));
         assertEquals("yyyy-MM-dd HH:mm B | 2015-11-13 09:00 at night", k210000, sdf.parse("2015-11-13 09:00 at night"));
@@ -5577,6 +5577,17 @@ public class DateFormatTest extends CoreTestFmwk {
             String pattern = ((SimpleDateFormat) fmt).toPattern();
             assertEquals("Format pattern", cas[1], pattern);
         }
+    }
+
+    @Test
+    public void testExtendedYear() {
+        ULocale locale = new ULocale("en-u-ca-ethiopic-amete-alem");
+        DateFormat fmt = DateFormat.getInstanceForSkeleton("yMd", locale);
+        DateFormat fmt2 = DateFormat.getInstanceForSkeleton("uMd", locale);
+        String result = fmt.format(new Date(98, 5-1, 25));
+        String result2 = fmt2.format(new Date(98, 5-1, 25));
+        assertEquals("Format", "9/17/7490 AA", result);
+        assertEquals("Format", result, result2);
     }
 
     @Test
@@ -5730,5 +5741,50 @@ public class DateFormatTest extends CoreTestFmwk {
             String actualResult = df.format(DATE);
             assertEquals("Wrong result for " + locale, testCase[1], actualResult);
         }
+    }
+
+    static private void oneCalendarTest(Locale locale, String expect1, String expect2) {
+        String skeleton = "EyMMMMdjmz";
+        long millis = 1758854856581L; // 2025/09/25 19:47:36
+
+        DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT, locale);
+        DateFormat sdf = SimpleDateFormat.getInstanceForSkeleton(skeleton, locale);
+        java.util.Calendar cal = java.util.Calendar.getInstance(locale);
+        cal.setTimeInMillis(millis);
+        assertEquals("", expect1, df.format(cal));
+        assertEquals("", expect2, sdf.format(cal));
+    }
+
+    @Test
+    public void TestJdkCalendarFormatting() {
+        long millis = 1758854856581L; // 2025/09/25 19:47:36
+        String skeleton = "EyMMMMdjmz";
+
+        oneCalendarTest(Locale.US,
+                "September 25, 2025 at 7:47\u202FPM",
+                "Thu, September 25, 2025 at 7:47\u202FPM PDT");
+
+        /*
+         * The JDK does not expose the non-Gregorian calendars,
+         * so we can't create them explicitly.
+         * The only way we can get them is by using the special
+         * locales `ja_JP_JP` and `th_TH_TH`, and by using `-u-ca`
+         */
+
+        // Japanese calendar
+        oneCalendarTest(new Locale("ja", "JP", "JP"),
+                "令和7年9月25日 19:47",
+                "令和7年9月25日(木) 19:47 GMT-7");
+        oneCalendarTest(Locale.forLanguageTag("en-US-u-ca-japanese"),
+                "September 25, 7 Reiwa at 7:47\u202FPM",
+                "Thu, September 25, 7 Reiwa at 7:47\u202FPM PDT");
+
+        // Buddhist calendar
+        oneCalendarTest(new Locale("th", "TH", "TH"),
+                "๒๕ กันยายน ค.ศ. ๒๐๒๕ เวลา ๑๙:๔๗",
+                "พฤหัส ๒๕ กันยายน ๒๐๒๕ เวลา ๑๙:๔๗ GMT-๗");
+        oneCalendarTest(Locale.forLanguageTag("en-US-u-ca-buddhist"),
+                "September 25, 2568 BE at 7:47\u202FPM",
+                "Thu, September 25, 2568 BE at 7:47\u202FPM PDT");
     }
 }

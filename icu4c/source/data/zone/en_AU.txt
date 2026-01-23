@@ -1,9 +1,12 @@
 ﻿// © 2016 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html
-// Generated using tools/cldr/cldr-to-icu/build-icu-data.xml
+// Generated using tools/cldr/cldr-to-icu/
 en_AU{
     %%Parent{"en_001"}
     zoneStrings{
+        "Pacific:Wallis"{
+            ec{"Wallis and Futuna"}
+        }
         "meta:Australia_Central"{
             sd{"ACDT"}
             sg{"ACT"}
@@ -28,6 +31,9 @@ en_AU{
             ld{"China Summer Time"}
             lg{"China Time"}
             ls{"China Standard Time"}
+        }
+        "meta:French_Southern"{
+            ls{"French Southern and Antarctic Time"}
         }
         "meta:Japan"{
             ld{"Japan Summer Time"}
@@ -56,8 +62,8 @@ en_AU{
         }
         "meta:Taipei"{
             ld{"Taipei Summer Time"}
-            lg{"Taipei Time"}
-            ls{"Taipei Standard Time"}
+            lg{"Taiwan Time"}
+            ls{"Taiwan Standard Time"}
         }
     }
 }

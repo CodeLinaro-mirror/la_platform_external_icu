@@ -9,6 +9,7 @@
 
 package com.ibm.icu.util;
 
+import java.util.BitSet;
 import java.util.Date;
 import java.util.Locale;
 
@@ -32,7 +33,7 @@ import com.ibm.icu.util.ULocale.Category;
  * information is available about the historical lengths.
  * <p>
  * The official rule for determination of the beginning of the Persian year
- * is locale dependent, but at the same time, it has not specified a locale. 
+ * is locale dependent, but at the same time, it has not specified a locale.
  * Iranians around the world traditionally follow the calendar authorities
  * of Iran, which haven't officially specified the locale.  Some
  * calendarists use some point in Tehran as the locale, while others have
@@ -40,7 +41,7 @@ import com.ibm.icu.util.ULocale.Category;
  * locale should be used for the Persian calendar of Afghanistan, but it is
  * expected that for about one year in every twenty-four years, the Afghan
  * calendar may become different from the Iranian one.
- * <p> 
+ * <p>
  * The exact locale to be used for the Iranian calendar starts to make a
  * difference at around 2090 CE.  The specific arithmetic method implemented
  * here, commonly known as the 33-year cycle rule, matches the astronomical
@@ -71,7 +72,7 @@ public class PersianCalendar extends Calendar {
     //-------------------------------------------------------------------------
     // Constants...
     //-------------------------------------------------------------------------
-    
+
     private static final int[][] MONTH_COUNT = {
         //len len2   st
         {  31,  31,   0 }, // Farvardin
@@ -90,8 +91,34 @@ public class PersianCalendar extends Calendar {
         // len2 length of month in a leap year
         // st   days in year before start of month
     };
-    
+
     private static final int PERSIAN_EPOCH = 1948320;
+
+    private static final class NonLeapYears {
+       private static final int NON_LEAP_YEARS[] = {
+           1502, 1601, 1634, 1667, 1700, 1733, 1766, 1799, 1832, 1865, 1898, 1931, 1964, 1997, 2030, 2059,
+           2063, 2096, 2129, 2158, 2162, 2191, 2195, 2224, 2228, 2257, 2261, 2290, 2294, 2323, 2327, 2356,
+           2360, 2389, 2393, 2422, 2426, 2455, 2459, 2488, 2492, 2521, 2525, 2554, 2558, 2587, 2591, 2620,
+           2624, 2653, 2657, 2686, 2690, 2719, 2723, 2748, 2752, 2756, 2781, 2785, 2789, 2818, 2822, 2847,
+           2851, 2855, 2880, 2884, 2888, 2913, 2917, 2921, 2946, 2950, 2954, 2979, 2983, 2987,
+        };
+        private int minYear = NON_LEAP_YEARS[0];
+        private int maxYear = NON_LEAP_YEARS[NON_LEAP_YEARS.length - 1];
+        private BitSet offsetYears;
+
+        public NonLeapYears() {
+            offsetYears = new BitSet(maxYear - minYear + 1);
+            for (int nonLeap : NON_LEAP_YEARS) {
+                offsetYears.set(nonLeap - minYear);
+            }
+        }
+
+        public boolean contains(int year) {
+            return minYear <= year && year <= maxYear && offsetYears.get(year - minYear);
+        }
+    }
+
+    private static NonLeapYears LEAP_CORRECTION = new NonLeapYears();
 
     //-------------------------------------------------------------------------
     // Constructors...
@@ -298,6 +325,7 @@ public class PersianCalendar extends Calendar {
      * @internal
      * @deprecated This API is ICU internal only.
      */
+    @Override
     @Deprecated
     protected int handleGetLimit(int field, int limitType) {
         return LIMITS[field][limitType];
@@ -312,10 +340,15 @@ public class PersianCalendar extends Calendar {
      */
     private final static boolean isLeapYear(int year)
     {
+        if (LEAP_CORRECTION.contains(year)) {
+            return false;
+        }
+        if (LEAP_CORRECTION.contains(year-1)) {
+            return true;
+        }
         int[] remainder = new int[1];
         floorDivide(25 * year + 11, 33, remainder);
         return remainder[0] < 8;
-        
     }
 
     //----------------------------------------------------------------------
@@ -331,6 +364,7 @@ public class PersianCalendar extends Calendar {
      * @internal
      * @deprecated This API is ICU internal only.
      */
+    @Override
     @Deprecated
     protected int handleGetMonthLength(int extendedYear, int month) {
         // If the month is out of range, adjust it into range, and
@@ -350,11 +384,12 @@ public class PersianCalendar extends Calendar {
      * @internal
      * @deprecated This API is ICU internal only.
      */
+    @Override
     @Deprecated
     protected int handleGetYearLength(int extendedYear) {
         return isLeapYear(extendedYear) ? 366 : 365;
     }
-    
+
     //-------------------------------------------------------------------------
     // Functions for converting from field values to milliseconds....
     //-------------------------------------------------------------------------
@@ -365,6 +400,7 @@ public class PersianCalendar extends Calendar {
      * @internal
      * @deprecated This API is ICU internal only.
      */
+    @Override
     @Deprecated
     protected int handleComputeMonthStart(int eyear, int month, boolean useMonth) {
         // If the month is out of range, adjust it into range, and
@@ -375,12 +411,12 @@ public class PersianCalendar extends Calendar {
             month = rem[0];
         }
 
-        int julianDay = PERSIAN_EPOCH - 1 + 365 * (eyear - 1) + floorDivide(8 * eyear + 21, 33);
+        long julianDay = PERSIAN_EPOCH - 1L + firstJulianOfYear(eyear);
         if (month != 0) {
             julianDay += MONTH_COUNT[month][2];
         }
-        return julianDay;
-    }    
+        return (int)julianDay;
+    }
 
     //-------------------------------------------------------------------------
     // Functions for converting from milliseconds to field values
@@ -390,6 +426,7 @@ public class PersianCalendar extends Calendar {
      * @internal
      * @deprecated This API is ICU internal only.
      */
+    @Override
     @Deprecated
     protected int handleGetExtendedYear() {
         int year;
@@ -401,6 +438,13 @@ public class PersianCalendar extends Calendar {
         return year;
     }
 
+    private static long firstJulianOfYear(int year) {
+        long julianDay = 365L * (year - 1L) + floorDivide(8L * year + 21, 33L);
+        if (LEAP_CORRECTION.contains(year-1)) {
+            julianDay--;
+        }
+        return julianDay;
+    }
     /**
      * Override Calendar to compute several fields specific to the Persian
      * calendar system.  These are:
@@ -411,13 +455,14 @@ public class PersianCalendar extends Calendar {
      * <li>DAY_OF_MONTH
      * <li>DAY_OF_YEAR
      * <li>EXTENDED_YEAR</ul>
-     * 
+     *
      * The DAY_OF_WEEK and DOW_LOCAL fields are already set when this
      * method is called.
      *
      * @internal
      * @deprecated This API is ICU internal only.
      */
+    @Override
     @Deprecated
     protected void handleComputeFields(int julianDay) {
         int year, month, dayOfMonth, dayOfYear;
@@ -425,24 +470,41 @@ public class PersianCalendar extends Calendar {
         long daysSinceEpoch = julianDay - PERSIAN_EPOCH;
         year = 1 + (int) floorDivide(33 * daysSinceEpoch + 3, 12053);
 
-        long farvardin1 = 365L * (year - 1L) + floorDivide(8L * year + 21, 33L);
+        long farvardin1 = firstJulianOfYear(year);
+
         dayOfYear = (int)(daysSinceEpoch - farvardin1); // 0-based
+        if (dayOfYear == 365 && LEAP_CORRECTION.contains(year)) {
+            year++;
+            dayOfYear = 0;
+        }
         if (dayOfYear < 216) { // Compute 0-based month
             month = dayOfYear / 31;
         } else {
             month = (dayOfYear - 6) / 30;
         }
-        dayOfMonth = dayOfYear - MONTH_COUNT[month][2] + 1;
+
         ++dayOfYear; // Make it 1-based now
-        
+        dayOfMonth = dayOfYear - MONTH_COUNT[month][2];
+
         internalSet(ERA, 0);
         internalSet(YEAR, year);
         internalSet(EXTENDED_YEAR, year);
         internalSet(MONTH, month);
         internalSet(ORDINAL_MONTH, month);
         internalSet(DAY_OF_MONTH, dayOfMonth);
-        internalSet(DAY_OF_YEAR, dayOfYear);       
-    }    
+        internalSet(DAY_OF_YEAR, dayOfYear);
+    }
+
+    private static final int PERSIAN_CALENDAR_RELATED_YEAR_DIFFERENCE = 622;
+    /**
+     * @internal
+     * @deprecated This API is ICU internal only.
+     */
+    @Override
+    @Deprecated
+    protected final int getRelatedYearDifference() {
+        return PERSIAN_CALENDAR_RELATED_YEAR_DIFFERENCE;
+    }
 
     /**
      * {@inheritDoc}
@@ -450,6 +512,7 @@ public class PersianCalendar extends Calendar {
      * @internal
      * @deprecated This API is ICU internal only.
      */
+    @Override
     @Deprecated
     public String getType() {
         return "persian";

@@ -68,13 +68,6 @@ final class IcuTextWriter {
         this.icuData = checkNotNull(icuData);
     }
 
-    // ICU-22781: start section
-    // TODO: remove once ICU-22781 is resolved
-    private final static RbPath LOCALE_PER_BILLION = RbPath.of("concentr", "portion-per-1e9");
-    private final static RbPath SUPLEMENTAL_UNITS = RbPath.of("idValidity", "unit", "regular");
-    private final static RbValue SUPLEMENTAL_PER_BILLION = RbValue.of("concentr-portion-per-1e9");
-    // ICU-22781: end section
-
     // TODO: Write a UTF-8 header (see https://unicode-org.atlassian.net/browse/ICU-10197).
     private void writeTo(PrintWriter out, List<String> header) {
         out.write('\uFEFF');
@@ -100,17 +93,6 @@ final class IcuTextWriter {
 
         RbPath lastPath = RbPath.of();
         for (RbPath path : icuData.getPaths()) {
-            // ICU-22781: start section
-            boolean mightBeSupplemental = false;
-            if (path.contains(LOCALE_PER_BILLION)) {
-                // I tried logging here, but it is too noisy.
-                // About 20 entries (and logging 20 lines) per locale.
-                continue;
-            }
-            if (path.contains(SUPLEMENTAL_UNITS)) {
-                mightBeSupplemental = true;
-            }
-            // ICU-22781: end section
             // Close any blocks up to the common path length. Since paths are all distinct, the
             // common length should always be shorter than either path. We add 1 since we must also
             // account for the implicit root segment.
@@ -119,14 +101,7 @@ final class IcuTextWriter {
             closeLastPath(commonDepth, out);
             // After opening the value will be ready for the next value to be written.
             openNextPath(path, out);
-            List<RbValue> values = icuData.get(path);
-            // ICU-22781: start section
-            if (mightBeSupplemental) {
-                System.out.println("(skipping " + SUPLEMENTAL_PER_BILLION + " until ICU-22781 is fixed)");
-                values.remove(SUPLEMENTAL_PER_BILLION);
-            }
-            // ICU-22781: end section
-            valueWasInline = appendValues(icuData.getName(), path, values, out);
+            valueWasInline = appendValues(icuData.getName(), path, icuData.get(path), out);
             lastPath = path;
         }
         closeLastPath(0, out);
@@ -277,7 +252,6 @@ final class IcuTextWriter {
     private static final RbPath RB_SEQUENCE = RbPath.of("Sequence");
     private static final RbPath RB_RULES = RbPath.of("rules");
     private static final RbPath RB_LOCALE_SCRIPT = RbPath.of("LocaleScript");
-    private static final RbPath RB_ERAS = RbPath.of("eras");
     private static final RbPath RB_NAMED = RbPath.of("named");
     private static final RbPath RB_CALENDAR_PREFERENCE_DATA = RbPath.of("calendarPreferenceData");
     private static final RbPath RB_METAZONE_INFO = RbPath.of("metazoneInfo");
@@ -295,9 +269,6 @@ final class IcuTextWriter {
                 && rbPath.getSegment(1).startsWith("set");
         }
         return rbPath.equals(RB_LOCALE_SCRIPT)
-            || (rbPath.contains(RB_ERAS)
-                && !rbPath.getSegment(rbPath.length() - 1).endsWith(":alias")
-                && !rbPath.endsWith(RB_NAMED))
             || rbPath.startsWith(RB_CALENDAR_PREFERENCE_DATA)
             || rbPath.startsWith(RB_METAZONE_INFO);
     }

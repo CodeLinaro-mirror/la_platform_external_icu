@@ -1393,7 +1393,7 @@ public class TimeZoneTest extends CoreTestFmwk
         TimeZone tz = TimeZone.getTimeZone(tzid);
         int offset = tz.getOffset(new Date().getTime());
         logln(tzid + ":\t" + offset);
-        List list = Arrays.asList(TimeZone.getAvailableIDs());
+        List<String> list = Arrays.asList(TimeZone.getAvailableIDs());
         if(!list.contains(tzid)){
             errln("Could create the time zone but it is not in getAvailableIDs");
         }
@@ -1846,8 +1846,8 @@ public class TimeZoneTest extends CoreTestFmwk
             // No Summer Time, but had it before 1983.
             {"Pacific/Honolulu",    "en",   Boolean.FALSE,  TZSHORT,    "HST"},
             {"Pacific/Honolulu",    "en",   Boolean.FALSE,  TZLONG,     "Hawaii-Aleutian Standard Time"},
-            {"Pacific/Honolulu",    "en",   Boolean.TRUE,   TZSHORT,    "HDT"},
-            {"Pacific/Honolulu",    "en",   Boolean.TRUE,   TZLONG,     "Hawaii-Aleutian Daylight Time"},
+            {"Pacific/Honolulu",    "en",   Boolean.TRUE,   TZSHORT,    "GMT-10"},
+            {"Pacific/Honolulu",    "en",   Boolean.TRUE,   TZLONG,     "GMT-10:00"},
 
             // Northern, has Summer, not commonly used.
             {"Europe/Helsinki",     "en",   Boolean.FALSE,  TZSHORT,    "GMT+2"/*"EET"*/},

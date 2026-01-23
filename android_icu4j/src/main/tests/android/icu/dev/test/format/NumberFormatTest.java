@@ -52,6 +52,9 @@ import android.icu.impl.data.TokenIterator;
 import android.icu.impl.number.PatternStringUtils;
 import android.icu.math.BigDecimal;
 import android.icu.math.MathContext;
+import android.icu.number.LocalizedNumberFormatter;
+import android.icu.number.NumberFormatter;
+import android.icu.number.NumberFormatter.UnitWidth;
 import android.icu.text.CompactDecimalFormat;
 import android.icu.text.CurrencyPluralInfo;
 import android.icu.text.DecimalFormat;
@@ -67,6 +70,7 @@ import android.icu.text.UnicodeSet;
 import android.icu.util.Currency;
 import android.icu.util.Currency.CurrencyUsage;
 import android.icu.util.CurrencyAmount;
+import android.icu.util.MeasureUnit;
 import android.icu.util.ULocale;
 import android.icu.testsharding.MainTestShard;
 
@@ -3184,7 +3188,7 @@ public class NumberFormatTest extends CoreTestFmwk {
         double expected = 12345;
         DecimalFormatSymbols sym = new DecimalFormatSymbols(Locale.US);
         DecimalFormat fmt = new DecimalFormat("#.#", sym);
-        ArrayList errors = new ArrayList();
+        ArrayList<String> errors = new ArrayList<>();
 
         ParseThreadJB5358[] threads = new ParseThreadJB5358[numThreads];
         for (int i = 0; i < numThreads; i++) {
@@ -3201,7 +3205,7 @@ public class NumberFormatTest extends CoreTestFmwk {
         if (errors.size() != 0) {
             StringBuffer errBuf = new StringBuffer();
             for (int i = 0; i < errors.size(); i++) {
-                errBuf.append((String)errors.get(i));
+                errBuf.append(errors.get(i));
                 errBuf.append("\n");
             }
             errln("FAIL: " + errBuf);
@@ -3212,9 +3216,9 @@ public class NumberFormatTest extends CoreTestFmwk {
         private final DecimalFormat decfmt;
         private final String numstr;
         private final double expect;
-        private final ArrayList errors;
+        private final ArrayList<String> errors;
 
-        public ParseThreadJB5358(DecimalFormat decfmt, String numstr, double expect, ArrayList errors) {
+        public ParseThreadJB5358(DecimalFormat decfmt, String numstr, double expect, ArrayList<String> errors) {
             this.decfmt = decfmt;
             this.numstr = numstr;
             this.expect = expect;
@@ -3678,6 +3682,32 @@ public class NumberFormatTest extends CoreTestFmwk {
             // group separator, even ',' is used as grouping
             // separator in the symbols.
             expect(fmt, "12 345", 12345);
+        }
+    }
+
+    @Test
+    public void TestDecimalFormatParse7E() {
+        String testdata = "~";
+        DecimalFormat dfmt = new DecimalFormat(testdata);
+        try {
+            dfmt.parse(testdata);
+            errln("parsing ~ should fail with a handled exception");
+        } catch (ParseException e) {
+        }
+
+        // Test basic behavior
+        dfmt = new DecimalFormat("~0");
+        dfmt.setParseStrict(true);
+        try {
+            dfmt.parse("200");
+            errln("parsing 200 should fail");
+        } catch (ParseException e) {
+        }
+        try {
+            Number result = dfmt.parse("≈200");
+            assertEquals("parsing with approximately should succeed", result.longValue(), 200);
+        } catch (ParseException e) {
+            errln(e.toString());
         }
     }
 
@@ -4458,12 +4488,12 @@ public class NumberFormatTest extends CoreTestFmwk {
                 {"ja_JP",             "-1000.5",  "-￥1,000",          "-￥1,000",          "(￥1,000)",         "false"},
                 {"ja_JP@cf=account",  "-1000.5",  "(￥1,000)",         "-￥1,000",          "(￥1,000)",         "false"},
                 {"de_DE",             "-23456.7", "-23.456,70\u00A0€", "-23.456,70\u00A0€", "-23.456,70\u00A0€", "true" },
-                {"en_ID",             "1234.5",   "Rp 1.234,50",      "Rp 1.234,50",      "Rp 1.234,50",      "true"},
-                {"en_ID@cf=account",  "1234.5",   "Rp 1.234,50",      "Rp 1.234,50",      "Rp 1.234,50",      "true"},
-                {"en_ID@cf=standard", "1234.5",   "Rp 1.234,50",      "Rp 1.234,50",      "Rp 1.234,50",      "true"},
-                {"en_ID",             "-1234.5",  "-Rp 1.234,50",     "-Rp 1.234,50",     "(Rp 1.234,50)",    "true"},
-                {"en_ID@cf=account",  "-1234.5",  "(Rp 1.234,50)",    "-Rp 1.234,50",     "(Rp 1.234,50)",    "true"},
-                {"en_ID@cf=standard", "-1234.5",  "-Rp 1.234,50",     "-Rp 1.234,50",     "(Rp 1.234,50)",    "true"},
+                {"en_ID",             "1234.5",   "Rp 1.234",      "Rp 1.234",      "Rp 1.234",      "true"},
+                {"en_ID@cf=account",  "1234.5",   "Rp 1.234",      "Rp 1.234",      "Rp 1.234",      "true"},
+                {"en_ID@cf=standard", "1234.5",   "Rp 1.234",      "Rp 1.234",      "Rp 1.234",      "true"},
+                {"en_ID",             "-1234.5",  "-Rp 1.234",     "-Rp 1.234",     "(Rp 1.234)",    "true"},
+                {"en_ID@cf=account",  "-1234.5",  "(Rp 1.234)",    "-Rp 1.234",     "(Rp 1.234)",    "true"},
+                {"en_ID@cf=standard", "-1234.5",  "-Rp 1.234",     "-Rp 1.234",     "(Rp 1.234)",    "true"},
                 {"sh_ME",             "1234.5",   "1.234,50 €",        "1.234,50 €",        "1.234,50 €",        "true"},
                 {"sh_ME@cf=account",  "1234.5",   "1.234,50 €",        "1.234,50 €",        "1.234,50 €",        "true"},
                 {"sh_ME@cf=standard", "1234.5",   "1.234,50 €",        "1.234,50 €",        "1.234,50 €",        "true"},
@@ -4796,7 +4826,7 @@ public class NumberFormatTest extends CoreTestFmwk {
         while (iterator.getIndex() != iterator.getEndIndex()) {
             int start = iterator.getRunStart();
             int end = iterator.getRunLimit();
-            Iterator it = iterator.getAttributes().keySet().iterator();
+            Iterator<AttributedCharacterIterator.Attribute> it = iterator.getAttributes().keySet().iterator();
             AttributedCharacterIterator.Attribute attribute = (AttributedCharacterIterator.Attribute) it.next();
             // For positions with both INTEGER and GROUPING attributes, we want the GROUPING attribute.
             if (it.hasNext() && attribute.equals(NumberFormat.Field.INTEGER)) {
@@ -5508,6 +5538,22 @@ public class NumberFormatTest extends CoreTestFmwk {
         } catch (ParseException e) {
             // Parse failed (expected)
         }
+    }
+
+    @Test
+    public void Test22303() throws ParseException {
+        ULocale locale = new ULocale("en-US");
+        DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance(locale);
+        symbols.setInfinity("infinity");
+        symbols.setNaN("notanumber");
+        DecimalFormat df = new DecimalFormat("0.00", symbols);
+        df.setDecimalPatternMatchRequired(true);
+        Number result = df.parse("infinity");
+        assertEquals("Should parse to +INF even though decimal is required", Double.POSITIVE_INFINITY, result);
+        result = df.parse("notanumber");
+        assertEquals("Should parse to NaN even though decimal is required", Double.NaN, result);
+        result = df.parse("-infinity");
+        assertEquals("Should parse to -INF even though decimal is required", Double.NEGATIVE_INFINITY, result);
     }
 
     @Test
@@ -6900,7 +6946,7 @@ public class NumberFormatTest extends CoreTestFmwk {
                 parsedStrictValue = ca_strict.getNumber().intValue();
             }
             assertEquals("Strict parse of " + inputString + " using " + patternString,
-                    parsedStrictValue, expectedStrictParse);
+                    expectedStrictParse, parsedStrictValue);
 
             ppos.setIndex(0);
             df.setParseStrict(false);
@@ -6909,7 +6955,7 @@ public class NumberFormatTest extends CoreTestFmwk {
                 parsedLenientValue = ca_lenient.getNumber().intValue();
             }
             assertEquals("Strict parse of " + inputString + " using " + patternString,
-                    parsedLenientValue, expectedLenientParse);
+                    expectedLenientParse, parsedLenientValue);
         }
     }
 
@@ -7059,4 +7105,153 @@ public class NumberFormatTest extends CoreTestFmwk {
 
         }
     }
+
+    @Test
+    public void TestArbitraryConstantFormatting() {
+
+        class TestData {
+            String unitIdentifier;
+            Integer inputValue;
+            String expectedOutput;
+            UnitWidth width;
+            ULocale locale;
+
+            public TestData(String unitIdentifier, Integer inputValue, UnitWidth width, ULocale locale,
+                    String expectedOutput) {
+                this.unitIdentifier = unitIdentifier;
+                this.inputValue = inputValue;
+                this.expectedOutput = expectedOutput;
+                this.width = width;
+                this.locale = locale;
+            }
+        }
+
+        TestData[] testData = {
+                new TestData("meter-per-kelvin-second", 2, UnitWidth.FULL_NAME, ULocale.ENGLISH,
+                        "2 meters per second-kelvin"),
+                new TestData("meter-per-100-kelvin-second", 3, UnitWidth.FULL_NAME, ULocale.ENGLISH,
+                        "3 meters per 100-second-kelvin"),
+                new TestData("meter-per-kelvin-second", 1, UnitWidth.FULL_NAME, ULocale.ENGLISH,
+                        "1 meter per second-kelvin"),
+                new TestData("meter-per-1000", 1, UnitWidth.FULL_NAME, ULocale.ENGLISH, "1 meter per 1000"),
+                new TestData("meter-per-1000-second", 1, UnitWidth.FULL_NAME, ULocale.ENGLISH,
+                        "1 meter per 1000-second"),
+                new TestData("meter-per-1000-second-kelvin", 1, UnitWidth.FULL_NAME, ULocale.ENGLISH,
+                        "1 meter per 1000-second-kelvin"),
+                new TestData("meter-per-1-second-kelvin-per-kilogram", 1, UnitWidth.FULL_NAME, ULocale.ENGLISH,
+                        "1 meter per 1-kilogram-second-kelvin"),
+                new TestData("meter-second-per-kilogram-kelvin", 1, UnitWidth.FULL_NAME, ULocale.ENGLISH,
+                        "1 meter-second per kilogram-kelvin"),
+                new TestData("meter-second-per-1000-kilogram-kelvin", 1, UnitWidth.FULL_NAME, ULocale.ENGLISH,
+                        "1 meter-second per 1000-kilogram-kelvin"),
+                new TestData("meter-second-per-1000-kilogram-kelvin", 1, UnitWidth.SHORT, ULocale.ENGLISH,
+                        "1 m⋅sec/1000⋅kg⋅K"),
+                new TestData("meter-second-per-1000-kilogram-kelvin", 1, UnitWidth.FULL_NAME, ULocale.GERMAN,
+                        "1 Meter⋅Sekunde pro 1000⋅Kilogramm⋅Kelvin"),
+                new TestData("meter-second-per-1000-kilogram-kelvin", 1, UnitWidth.SHORT, ULocale.GERMAN,
+                        "1 m⋅Sek./1000⋅kg⋅K"),
+        };
+
+        for (TestData testCase : testData) {
+            MeasureUnit unit = MeasureUnit.forIdentifier(testCase.unitIdentifier);
+            LocalizedNumberFormatter formatter = NumberFormatter.withLocale(testCase.locale).unit(unit)
+                    .unitWidth(testCase.width);
+
+            String formatted = formatter.format(testCase.inputValue).toString();
+            assertEquals(
+                    "Unit: " + testCase.unitIdentifier + ", Width: " + testCase.width + ", Input: "
+                            + testCase.inputValue,
+                    testCase.expectedOutput, formatted);
+        }
+
+    }
+
+    @Test
+    public void TestPortionFormat() {
+        class TestCase {
+            String unitIdentifier;
+            String locale;
+            double inputValue;
+            String expectedOutput;
+
+            TestCase(String unitIdentifier, String locale, double inputValue, String expectedOutput) {
+                this.unitIdentifier = unitIdentifier;
+                this.locale = locale;
+                this.inputValue = inputValue;
+                this.expectedOutput = expectedOutput;
+            }
+        }
+
+        TestCase[] testCases = {
+                new TestCase("part-per-1e9", "en-US", 1, "1 part per billion"),
+                new TestCase("part-per-1e9", "en-US", 2, "2 parts per billion"),
+                new TestCase("part-per-1e9", "en-US", 1000000, "1,000,000 parts per billion"),
+                new TestCase("part-per-1e9", "de-DE", 1000000, "1.000.000 Milliardstel"),
+                new TestCase("part-per-1e1", "en-US", 1, "1 part per 10"),
+                new TestCase("part-per-1e2", "en-US", 1, "1 part per 100"),
+                new TestCase("part-per-1e3", "en-US", 1, "1 part per 1000"),
+                new TestCase("part-per-1e4", "en-US", 1, "1 part per 10000"),
+                new TestCase("part-per-1e5", "en-US", 1, "1 part per 100000"),
+                new TestCase("part-per-1e6", "en-US", 1, "1 part per million"),
+                new TestCase("part-per-1e7", "en-US", 1, "1 part per 10000000"),
+                new TestCase("part-per-1e8", "en-US", 1, "1 part per 100000000"),
+        };
+
+        for (TestCase testCase : testCases) {
+            MeasureUnit unit = MeasureUnit.forIdentifier(testCase.unitIdentifier);
+            LocalizedNumberFormatter formatter = NumberFormatter.withLocale(ULocale.forLanguageTag(testCase.locale))
+                    .unit(unit)
+                    .unitWidth(UnitWidth.FULL_NAME);
+            String formatted = formatter.format(testCase.inputValue).toString();
+            assertEquals(
+                    "Unit: " + testCase.unitIdentifier + ", Locale: " + testCase.locale + ", Input: "
+                            + testCase.inputValue,
+                    testCase.expectedOutput, formatted);
+        }
+    }
+
+    @Test // ICU-23139
+    public void testStrictParse() throws java.text.ParseException {
+        // fr-FR: grouping separator '\u202F', decimal separator ','
+        // en-US: grouping separator ',', decimal separator '.'
+        // de: grouping separator '.', decimal separator ','
+        // de-CH: grouping separator '\u2019', decimal separator '.'
+        String[] locales = { "fr-FR", "en-US", "de", "de-CH" };
+        String[] toParse =
+            { "1.234", "1,234", "1\u00a0234", "1 234", "1.234,567" };
+        double[][] expectedLenient = {
+            {   1234,   1.234,         1234,    1234,    1234.567 }, // fr-FR
+            {  1.234,    1234,         1234,    1234,   1.234 }, // en-US
+            {   1234,   1.234,         1234,    1234,    1234.567 }, // de
+            {  1.234,    1234,         1234,    1234,   1.234 } // de-CH
+        };
+        double[][] expectedStrict  = {
+            {      1,   1.234,         1234,    1234,       1 }, // fr-FR
+            {  1.234,    1234,            1,       1,   1.234 }, // en-US
+            {   1234,   1.234,            1,       1,    1234.567 }, // de
+            {  1.234,       1,         1234,    1234,   1.234 } // de-CH
+        };
+
+        Number result;
+
+        for (int idxLocale = 0; idxLocale < locales.length; idxLocale++) {
+            Locale locale = Locale.forLanguageTag(locales[idxLocale]);
+            NumberFormat nf = NumberFormat.getInstance(locale);
+
+            nf.setParseStrict(false);
+            for (int i = 0; i < toParse.length; i++) {
+                String test = toParse[i];
+                result = nf.parse(test);
+                assertEquals("Lenient parsing", expectedLenient[idxLocale][i], result.doubleValue());
+            }
+
+            nf.setParseStrict(true);
+            for (int i = 0; i < toParse.length; i++) {
+                String test = toParse[i];
+                result = nf.parse(test);
+                assertEquals("Strict parsing", expectedStrict[idxLocale][i], result.doubleValue());
+            }
+        }
+    }
+
 }

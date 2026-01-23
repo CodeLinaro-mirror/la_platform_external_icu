@@ -169,6 +169,18 @@ public class RBNFParseTest extends CoreTestFmwk {
     }
 
     @Test
+    public void TestParseRuleDescriptorOverflow23002() {
+        try {
+            RuleBasedNumberFormat rbnf =
+                new RuleBasedNumberFormat(
+                    "0110110/300113001103000113001103000110i/3013033:",
+                    new Locale("as"));
+        } catch (IllegalArgumentException e) {
+            return;
+        }
+        errln("expected exception but didn't get one!");
+    }
+    @Test
     public void TestBadParse() {
         RuleBasedNumberFormat rbnf = new RuleBasedNumberFormat(Locale.JAPAN, RuleBasedNumberFormat.SPELLOUT);
         String[] testData = {
@@ -183,6 +195,29 @@ public class RBNFParseTest extends CoreTestFmwk {
             catch (ParseException e) {
                 // success!
             }
+        }
+    }
+    @Test
+    public void Test23184EmptyRuleSet() {
+        try {
+            RuleBasedNumberFormat rbnf = new RuleBasedNumberFormat("x00:>%>>;%;<0<<", Locale.US);
+            errln("Failed: should throw IllegalArgumentException");
+        } catch (IllegalArgumentException e) {
+            // success!
+        }
+        try {
+            RuleBasedNumberFormat rbnf = new RuleBasedNumberFormat("x00:>%>>;%:;<0<<", Locale.US);
+            errln("Failed: should throw IllegalArgumentException");
+        } catch (IllegalArgumentException e) {
+            // success!
+        }
+    }
+    @Test
+    public void TestNullRuleSet() {
+        try {
+            RuleBasedNumberFormat rbnf = new RuleBasedNumberFormat("x00:a>>>b>#>", Locale.US);
+        } catch (IllegalArgumentException e) {
+            // success!
         }
     }
 }
