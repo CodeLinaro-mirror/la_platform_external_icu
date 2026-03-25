@@ -379,14 +379,13 @@ public:
 
     template<typename CP32, UTFIllFormedBehavior behavior, typename StringView>
     CP32 sub(StringView part) {
-        if constexpr (behavior == UTF_BEHAVIOR_NEGATIVE) {
-            return U_SENTINEL;
-        } else if constexpr (behavior == UTF_BEHAVIOR_FFFD) {
-            return 0xfffd;
-        } else {
-            static_assert(behavior == UTF_BEHAVIOR_SURROGATE);
-            auto c = part[0];
-            return U_IS_SURROGATE(c) ? static_cast<char32_t>(c) : 0xfffd;
+        switch (behavior) {
+            case UTF_BEHAVIOR_NEGATIVE: return U_SENTINEL;
+            case UTF_BEHAVIOR_FFFD: return 0xfffd;
+            case UTF_BEHAVIOR_SURROGATE: {
+                auto c = part[0];
+                return U_IS_SURROGATE(c) ? static_cast<char32_t>(c) : 0xfffd;
+            }
         }
     }
 

@@ -170,7 +170,6 @@ ps{
                 H{"H"}
                 Hm{"H:mm"}
                 Hms{"H:mm:ss"}
-                Hv{"H v"}
                 MMMMd{"d MMMM"}
                 Md{"M/d"}
                 yM{"G y/M"}
@@ -223,10 +222,6 @@ ps{
         }
         gregorian{
             AmPmMarkers{
-                "غ.م.",
-                "غ.و.",
-            }
-            AmPmMarkersAbbr{
                 "غ.م.",
                 "غ.و.",
             }
