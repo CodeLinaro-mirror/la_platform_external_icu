@@ -113,7 +113,7 @@ static const int32_t       GMT_ID_LENGTH = 3;
 static const int32_t       UNKNOWN_ZONE_ID_LENGTH = 11;
 
 static icu::TimeZone* DEFAULT_ZONE = NULL;
-static icu::UInitOnce gDefaultZoneInitOnce = U_INITONCE_INITIALIZER;
+static icu::UInitOnce gDefaultZoneInitOnce {};
 
 alignas(icu::SimpleTimeZone)
 static char gRawGMT[sizeof(icu::SimpleTimeZone)];
@@ -121,11 +121,11 @@ static char gRawGMT[sizeof(icu::SimpleTimeZone)];
 alignas(icu::SimpleTimeZone)
 static char gRawUNKNOWN[sizeof(icu::SimpleTimeZone)];
 
-static icu::UInitOnce gStaticZonesInitOnce = U_INITONCE_INITIALIZER;
+static icu::UInitOnce gStaticZonesInitOnce {};
 static UBool gStaticZonesInitialized = FALSE; // Whether the static zones are initialized and ready to use.
 
 static char TZDATA_VERSION[16];
-static icu::UInitOnce gTZDataVersionInitOnce = U_INITONCE_INITIALIZER;
+static icu::UInitOnce gTZDataVersionInitOnce {};
 
 static int32_t* MAP_SYSTEM_ZONES = NULL;
 static int32_t* MAP_CANONICAL_SYSTEM_ZONES = NULL;
@@ -135,9 +135,9 @@ static int32_t LEN_SYSTEM_ZONES = 0;
 static int32_t LEN_CANONICAL_SYSTEM_ZONES = 0;
 static int32_t LEN_CANONICAL_SYSTEM_LOCATION_ZONES = 0;
 
-static icu::UInitOnce gSystemZonesInitOnce = U_INITONCE_INITIALIZER;
-static icu::UInitOnce gCanonicalZonesInitOnce = U_INITONCE_INITIALIZER;
-static icu::UInitOnce gCanonicalLocationZonesInitOnce = U_INITONCE_INITIALIZER;
+static icu::UInitOnce gSystemZonesInitOnce {};
+static icu::UInitOnce gCanonicalZonesInitOnce {};
+static icu::UInitOnce gCanonicalLocationZonesInitOnce {};
 
 U_CDECL_BEGIN
 static UBool U_CALLCONV timeZone_cleanup(void)
@@ -376,7 +376,7 @@ TimeZone::operator=(const TimeZone &right)
 
 // -------------------------------------
 
-UBool
+bool
 TimeZone::operator==(const TimeZone& that) const
 {
     return typeid(*this) == typeid(that) &&
@@ -575,6 +575,24 @@ TimeZone::createDefault()
         Mutex lock(&gDefaultZoneMutex);
         return (DEFAULT_ZONE != NULL) ? DEFAULT_ZONE->clone() : NULL;
     }
+}
+
+// -------------------------------------
+
+TimeZone* U_EXPORT2
+TimeZone::forLocaleOrDefault(const Locale& locale)
+{
+    char buffer[ULOC_KEYWORDS_CAPACITY] = "";
+    UErrorCode localStatus = U_ZERO_ERROR;
+    int32_t count = locale.getKeywordValue("timezone", buffer, sizeof(buffer), localStatus);
+    if (U_FAILURE(localStatus) || localStatus == U_STRING_NOT_TERMINATED_WARNING) {
+        // the "timezone" keyword exceeds ULOC_KEYWORDS_CAPACITY; ignore and use default.
+        count = 0;
+    }
+    if (count > 0) {
+        return TimeZone::createTimeZone(UnicodeString(buffer, count, US_INV));
+    }
+    return TimeZone::createDefault();
 }
 
 // -------------------------------------

@@ -174,7 +174,7 @@ public:
      * @return         true if other is semantically equal to this.
      * @stable ICU 2.0
      */
-    UBool operator==(const DateFormatSymbols& other) const;
+    bool operator==(const DateFormatSymbols& other) const;
 
     /**
      * Return true if another object is semantically unequal to this one.
@@ -183,7 +183,7 @@ public:
      * @return         true if other is semantically unequal to this.
      * @stable ICU 2.0
      */
-    UBool operator!=(const DateFormatSymbols& other) const { return !operator==(other); }
+    bool operator!=(const DateFormatSymbols& other) const { return !operator==(other); }
 
     /**
      * Gets abbreviated era strings. For example: "AD" and "BC".
@@ -919,7 +919,8 @@ private:
      *                             failure code upon return.
      * @param useLastResortData    determine if use last resort data
      */
-    void initializeData(const Locale& locale, const char *type, UErrorCode& status, UBool useLastResortData = FALSE);
+    void initializeData(const Locale& locale, const char *type,
+                        UErrorCode& status, UBool useLastResortData = false);
 
     /**
      * Copy or alias an array in another object, as appropriate.
@@ -983,12 +984,12 @@ private:
     static UDateFormatField U_EXPORT2 getPatternCharIndex(char16_t c);
 
     /**
-     * Returns TRUE if f (with its pattern character repeated count times) is a numeric field.
+     * Returns true if f (with its pattern character repeated count times) is a numeric field.
      */
     static UBool U_EXPORT2 isNumericField(UDateFormatField f, int32_t count);
 
     /**
-     * Returns TRUE if c (repeated count times) is the pattern character for a numeric field.
+     * Returns true if c (repeated count times) is the pattern character for a numeric field.
      */
     static UBool U_EXPORT2 isNumericPatternChar(char16_t c, int32_t count);
 public:

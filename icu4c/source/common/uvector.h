@@ -64,7 +64,7 @@ U_NAMESPACE_BEGIN
  * uses a comparison function, or "comparer."  If the comparer is not
  * set, or is set to zero, then all such methods will act as if the
  * vector contains no element.  That is, indexOf() will always return
- * -1, contains() will always return FALSE, etc.
+ * -1, contains() will always return false, etc.
  *
  * <p><b>To do</b>
  *
@@ -113,12 +113,12 @@ public:
      * equal if they are of the same size and all elements are equal,
      * as compared using this object's comparer.
      */
-    UBool operator==(const UVector& other);
+    bool operator==(const UVector& other);
 
     /**
      * Equivalent to !operator==()
      */
-    inline UBool operator!=(const UVector& other);
+    inline bool operator!=(const UVector& other);
 
     //------------------------------------------------------------
     // java.util.Vector API
@@ -382,7 +382,7 @@ inline void* UVector::operator[](int32_t index) const {
     return elementAt(index);
 }
 
-inline UBool UVector::operator!=(const UVector& other) {
+inline bool UVector::operator!=(const UVector& other) {
     return !operator==(other);
 }
 

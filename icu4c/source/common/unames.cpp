@@ -105,7 +105,7 @@ typedef struct {
 
 static UDataMemory *uCharNamesData=NULL;
 static UCharNames *uCharNames=NULL;
-static icu::UInitOnce gCharNamesInitOnce = U_INITONCE_INITIALIZER;
+static icu::UInitOnce gCharNamesInitOnce {};
 
 /*
  * Maximum length of character names (regular & 1.0).
@@ -1519,7 +1519,8 @@ U_CAPI UChar32 U_EXPORT2
 u_charFromName(UCharNameChoice nameChoice,
                const char *name,
                UErrorCode *pErrorCode) {
-    char upper[120], lower[120];
+    char upper[120] = {0};
+    char lower[120] = {0};
     FindName findName;
     AlgorithmicRange *algRange;
     uint32_t *p;

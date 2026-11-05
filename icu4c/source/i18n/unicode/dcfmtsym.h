@@ -255,7 +255,7 @@ public:
      * @return         true if another object is semantically equal to this one.
      * @stable ICU 2.0
      */
-    UBool operator==(const DecimalFormatSymbols& other) const;
+    bool operator==(const DecimalFormatSymbols& other) const;
 
     /**
      * Return true if another object is semantically unequal to this one.
@@ -264,7 +264,7 @@ public:
      * @return         true if another object is semantically unequal to this one.
      * @stable ICU 2.0
      */
-    UBool operator!=(const DecimalFormatSymbols& other) const { return !operator==(other); }
+    bool operator!=(const DecimalFormatSymbols& other) const { return !operator==(other); }
 
     /**
      * Get one of the format symbols by its enum constant.
@@ -290,6 +290,17 @@ public:
      * @stable ICU 2.0
      */
     void setSymbol(ENumberFormatSymbol symbol, const UnicodeString &value, const UBool propogateDigits);
+
+#ifndef U_HIDE_INTERNAL_API
+    /**
+     * Loads symbols for the specified currency into this instance.
+     *
+     * This method is internal. If you think it should be public, file a ticket.
+     *
+     * @internal
+     */
+    void setCurrency(const UChar* currency, UErrorCode& status);
+#endif  // U_HIDE_INTERNAL_API
 
     /**
      * Returns the locale for which this object was constructed.
@@ -367,14 +378,12 @@ private:
      *                             back to the locale.
      */
     void initialize(const Locale& locale, UErrorCode& success,
-        UBool useLastResortData = FALSE, const NumberingSystem* ns = nullptr);
+                    UBool useLastResortData = false, const NumberingSystem* ns = nullptr);
 
     /**
      * Initialize the symbols with default values.
      */
     void initialize();
-
-    void setCurrencyForSymbols();
 
 public:
 
@@ -534,12 +543,12 @@ inline const UnicodeString& DecimalFormatSymbols::getConstDigitSymbol(int32_t di
 // -------------------------------------
 
 inline void
-DecimalFormatSymbols::setSymbol(ENumberFormatSymbol symbol, const UnicodeString &value, const UBool propogateDigits = TRUE) {
+DecimalFormatSymbols::setSymbol(ENumberFormatSymbol symbol, const UnicodeString &value, const UBool propagateDigits = true) {
     if (symbol == kCurrencySymbol) {
-        fIsCustomCurrencySymbol = TRUE;
+        fIsCustomCurrencySymbol = true;
     }
     else if (symbol == kIntlCurrencySymbol) {
-        fIsCustomIntlCurrencySymbol = TRUE;
+        fIsCustomIntlCurrencySymbol = true;
     }
     if(symbol<kFormatSymbolCount) {
         fSymbols[symbol]=value;
@@ -550,7 +559,7 @@ DecimalFormatSymbols::setSymbol(ENumberFormatSymbol symbol, const UnicodeString 
     // Also record updates to fCodePointZero. Be conservative if in doubt.
     if (symbol == kZeroDigitSymbol) {
         UChar32 sym = value.char32At(0);
-        if ( propogateDigits && u_charDigitValue(sym) == 0 && value.countChar32() == 1 ) {
+        if ( propagateDigits && u_charDigitValue(sym) == 0 && value.countChar32() == 1 ) {
             fCodePointZero = sym;
             for ( int8_t i = 1 ; i<= 9 ; i++ ) {
                 sym++;

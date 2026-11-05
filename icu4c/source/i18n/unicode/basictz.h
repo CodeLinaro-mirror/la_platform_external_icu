@@ -56,7 +56,7 @@ public:
      * @param base      The base time.
      * @param inclusive Whether the base time is inclusive or not.
      * @param result    Receives the first transition after the base time.
-     * @return  TRUE if the transition is found.
+     * @return  true if the transition is found.
      * @stable ICU 3.8
      */
     virtual UBool getNextTransition(UDate base, UBool inclusive, TimeZoneTransition& result) const = 0;
@@ -66,7 +66,7 @@ public:
      * @param base      The base time.
      * @param inclusive Whether the base time is inclusive or not.
      * @param result    Receives the most recent transition before the base time.
-     * @return  TRUE if the transition is found.
+     * @return  true if the transition is found.
      * @stable ICU 3.8
      */
     virtual UBool getPreviousTransition(UDate base, UBool inclusive, TimeZoneTransition& result) const = 0;
@@ -177,13 +177,15 @@ protected:
 
 #ifndef U_HIDE_INTERNAL_API
     /**
-     * The time type option bit masks used by getOffsetFromLocal
+     * A time type option bit mask used by getOffsetFromLocal.
      * @internal
      */
-    enum {
-        kStdDstMask = kDaylight,
-        kFormerLatterMask = kLatter
-    };
+    static constexpr int32_t kStdDstMask = kDaylight;
+    /**
+     * A time type option bit mask used by getOffsetFromLocal.
+     * @internal
+     */
+    static constexpr int32_t kFormerLatterMask = kLatter;
 #endif  /* U_HIDE_INTERNAL_API */
 
     /**
@@ -205,6 +207,12 @@ protected:
      * @stable ICU 3.8
      */
     BasicTimeZone(const BasicTimeZone& source);
+
+    /**
+     * Copy assignment.
+     * @stable ICU 3.8
+     */
+    BasicTimeZone& operator=(const BasicTimeZone&) = default;
 
     /**
      * Gets the set of TimeZoneRule instances applicable to the specified time and after.

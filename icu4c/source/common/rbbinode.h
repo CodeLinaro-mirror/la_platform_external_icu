@@ -79,7 +79,7 @@ class RBBINode : public UMemory {
                                             //   corresponds to columns in the final
                                             //   state transition table.
 
-        UBool         fLookAheadEnd;        // For endMark nodes, set TRUE if
+        UBool         fLookAheadEnd;        // For endMark nodes, set true if
                                             //   marking the end of a look-ahead rule.
 
         UBool         fRuleRoot;            // True if this node is the root of a rule.
@@ -108,7 +108,7 @@ class RBBINode : public UMemory {
 
     private:
         RBBINode &operator = (const RBBINode &other); // No defs.
-        UBool operator == (const RBBINode &other);    // Private, so these functions won't accidently be used.
+        bool operator == (const RBBINode &other);     // Private, so these functions won't accidentally be used.
 
 #ifdef RBBI_DEBUG
     public:

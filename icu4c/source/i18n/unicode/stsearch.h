@@ -292,12 +292,12 @@ public:
     /**
      * Equality operator. 
      * @param that instance to be compared.
-     * @return TRUE if both instances have the same attributes, 
+     * @return true if both instances have the same attributes, 
      *         breakiterators, collators and iterate over the same text 
      *         while looking for the same pattern.
      * @stable ICU 2.0
      */
-    virtual UBool operator==(const SearchIterator &that) const;
+    virtual bool operator==(const SearchIterator &that) const;
 
     // public get and set methods ----------------------------------------
 

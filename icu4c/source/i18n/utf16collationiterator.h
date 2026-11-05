@@ -42,7 +42,7 @@ public:
 
     virtual ~UTF16CollationIterator();
 
-    virtual UBool operator==(const CollationIterator &other) const;
+    virtual bool operator==(const CollationIterator &other) const;
 
     virtual void resetToOffset(int32_t newOffset);
 
@@ -95,7 +95,7 @@ public:
 
     virtual ~FCDUTF16CollationIterator();
 
-    virtual UBool operator==(const CollationIterator &other) const;
+    virtual bool operator==(const CollationIterator &other) const;
 
     virtual void resetToOffset(int32_t newOffset);
 
@@ -125,7 +125,7 @@ private:
     /**
      * Extend the FCD text segment forward or normalize around pos.
      * To be called when checkDir > 0 && pos != limit.
-     * @return TRUE if success, checkDir == 0 and pos != limit
+     * @return true if success, checkDir == 0 and pos != limit
      */
     UBool nextSegment(UErrorCode &errorCode);
 
@@ -139,7 +139,7 @@ private:
     /**
      * Extend the FCD text segment backward or normalize around pos.
      * To be called when checkDir < 0 && pos != start.
-     * @return TRUE if success, checkDir == 0 and pos != start
+     * @return true if success, checkDir == 0 and pos != start
      */
     UBool previousSegment(UErrorCode &errorCode);
 

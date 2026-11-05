@@ -12,7 +12,6 @@
 #include "unicode/utf16.h"
 #include "unicode/utf8.h"
 #include "uassert.h"
-#include "ucptrie_impl.h"
 #include "utrie.h"
 #include "cstring.h"
 #include "cmemory.h"
@@ -1143,6 +1142,9 @@ TrieTestSet2Overlap(void) {
 static void
 TrieTestSet3Initial9(void) {
     testTrieRanges("set3-initial-9", FALSE,
+        setRanges3, UPRV_LENGTHOF(setRanges3),
+        checkRanges3, UPRV_LENGTHOF(checkRanges3));
+    testTrieRanges("set3-initial-9-clone", TRUE,
         setRanges3, UPRV_LENGTHOF(setRanges3),
         checkRanges3, UPRV_LENGTHOF(checkRanges3));
 }

@@ -76,7 +76,7 @@ public:
       *semantically equal.
      * @stable ICU 3.8
      */
-    virtual UBool operator==(const TimeZone& that) const;
+    virtual bool operator==(const TimeZone& that) const;
 
     /**
      * Return true if the given <code>TimeZone</code> objects are
@@ -86,7 +86,7 @@ public:
      * semantically unequal.
      * @stable ICU 3.8
      */
-    virtual UBool operator!=(const TimeZone& that) const;
+    virtual bool operator!=(const TimeZone& that) const;
 
     /**
      * Adds the <code>TimeZoneRule</code> which represents time transitions.
@@ -258,7 +258,7 @@ public:
      * @param base      The base time.
      * @param inclusive Whether the base time is inclusive or not.
      * @param result    Receives the first transition after the base time.
-     * @return  TRUE if the transition is found.
+     * @return  true if the transition is found.
      * @stable ICU 3.8
      */
     virtual UBool getNextTransition(UDate base, UBool inclusive, TimeZoneTransition& result) const;
@@ -268,7 +268,7 @@ public:
      * @param base      The base time.
      * @param inclusive Whether the base time is inclusive or not.
      * @param result    Receives the most recent transition before the base time.
-     * @return  TRUE if the transition is found.
+     * @return  true if the transition is found.
      * @stable ICU 3.8
      */
     virtual UBool getPreviousTransition(UDate base, UBool inclusive, TimeZoneTransition& result) const;

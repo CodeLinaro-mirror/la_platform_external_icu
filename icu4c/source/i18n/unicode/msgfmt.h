@@ -255,7 +255,7 @@ class NumberFormat;
  * or preformatted values, but not pattern strings or custom format objects.</p>
  *
  * <p>For more details, see the
- * <a href="http://userguide.icu-project.org/formatparse/messages">ICU User Guide</a>.</p>
+ * <a href="https://unicode-org.github.io/icu/userguide/format_parse/messages">ICU User Guide</a>.</p>
  *
  * <h4>Usage Information</h4>
  *
@@ -429,7 +429,7 @@ public:
      * @return       true if the given Format objects are semantically equal.
      * @stable ICU 2.0
      */
-    virtual UBool operator==(const Format& other) const;
+    virtual bool operator==(const Format& other) const;
 
     /**
      * Sets the locale to be used for creating argument Format objects.
@@ -920,7 +920,7 @@ private:
     int32_t            argTypeCapacity;
 
     /**
-     * TRUE if there are different argTypes for the same argument.
+     * true if there are different argTypes for the same argument.
      * This only matters when the MessageFormat is used in the plain C (umsg_xxx) API
      * where the pattern argTypes determine how the va_arg list is read.
      */
@@ -1088,7 +1088,7 @@ private:
      */
     class U_I18N_API DummyFormat : public Format {
     public:
-        virtual UBool operator==(const Format&) const;
+        virtual bool operator==(const Format&) const;
         virtual DummyFormat* clone() const;
         virtual UnicodeString& format(const Formattable& obj,
                               UnicodeString& appendTo,

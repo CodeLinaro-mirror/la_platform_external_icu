@@ -79,7 +79,7 @@ PersianCalendar* PersianCalendar::clone() const {
 }
 
 PersianCalendar::PersianCalendar(const Locale& aLocale, UErrorCode& success)
-  :   Calendar(TimeZone::createDefault(), aLocale, success)
+  :   Calendar(TimeZone::forLocaleOrDefault(aLocale), aLocale, success)
 {
     setTimeInMillis(getNow(), success); // Call this again now that the vtable is set up properly.
 }
@@ -250,7 +250,7 @@ PersianCalendar::inDaylightTime(UErrorCode& status) const
 
 static UDate           gSystemDefaultCenturyStart       = DBL_MIN;
 static int32_t         gSystemDefaultCenturyStartYear   = -1;
-static icu::UInitOnce  gSystemDefaultCenturyInit        = U_INITONCE_INITIALIZER;
+static icu::UInitOnce  gSystemDefaultCenturyInit        {};
 
 UBool PersianCalendar::haveDefaultCentury() const
 {

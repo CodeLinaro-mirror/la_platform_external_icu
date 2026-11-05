@@ -107,11 +107,11 @@ public:
      * the same ID, raw GMT offset, and DST rules.
      *
      * @param that  The SimpleTimeZone object to be compared with.
-     * @return      True if the given time zone is equal to this time zone; false
+     * @return      true if the given time zone is equal to this time zone; false
      *              otherwise.
      * @stable ICU 2.0
      */
-    virtual UBool operator==(const TimeZone& that) const;
+    virtual bool operator==(const TimeZone& that) const;
 
     /**
      * Constructs a SimpleTimeZone with the given raw GMT offset and time zone ID,
@@ -714,7 +714,7 @@ public:
      * @param base      The base time.
      * @param inclusive Whether the base time is inclusive or not.
      * @param result    Receives the first transition after the base time.
-     * @return  TRUE if the transition is found.
+     * @return  true if the transition is found.
      * @stable ICU 3.8
      */
     virtual UBool getNextTransition(UDate base, UBool inclusive, TimeZoneTransition& result) const;
@@ -724,7 +724,7 @@ public:
      * @param base      The base time.
      * @param inclusive Whether the base time is inclusive or not.
      * @param result    Receives the most recent transition before the base time.
-     * @return  TRUE if the transition is found.
+     * @return  true if the transition is found.
      * @stable ICU 3.8
      */
     virtual UBool getPreviousTransition(UDate base, UBool inclusive, TimeZoneTransition& result) const;

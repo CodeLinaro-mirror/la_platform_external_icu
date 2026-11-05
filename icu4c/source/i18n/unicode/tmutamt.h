@@ -39,7 +39,7 @@ public:
     /**
      * Construct TimeUnitAmount object with the given number and the
      * given time unit. 
-     * @param number        a numeric object; number.isNumeric() must be TRUE
+     * @param number        a numeric object; number.isNumeric() must be true
      * @param timeUnitField the time unit field of a time unit
      * @param status        the input-output error code. 
      *                      If the number is not numeric or the timeUnitField
@@ -103,7 +103,7 @@ public:
      * @return       true if this object is equal to the given object.
      * @stable ICU 4.2
      */
-    virtual UBool operator==(const UObject& other) const;
+    virtual bool operator==(const UObject& other) const;
 
 
     /** 
@@ -112,7 +112,7 @@ public:
      * @return       true if this object is not equal to the given object.
      * @stable ICU 4.2
      */
-    UBool operator!=(const UObject& other) const;
+    bool operator!=(const UObject& other) const;
 
 
     /**
@@ -160,7 +160,7 @@ public:
 
 
 
-inline UBool 
+inline bool
 TimeUnitAmount::operator!=(const UObject& other) const {
     return !operator==(other);
 }

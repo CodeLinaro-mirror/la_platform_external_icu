@@ -450,6 +450,7 @@ DateFormatSymbols::copyData(const DateFormatSymbols& other) {
  */
 DateFormatSymbols& DateFormatSymbols::operator=(const DateFormatSymbols& other)
 {
+    if (this == &other) { return *this; }  // self-assignment: no-op
     dispose();
     copyData(other);
 
@@ -534,7 +535,7 @@ DateFormatSymbols::arrayCompare(const UnicodeString* array1,
     return TRUE;
 }
 
-UBool
+bool
 DateFormatSymbols::operator==(const DateFormatSymbols& other) const
 {
     // First do cheap comparisons

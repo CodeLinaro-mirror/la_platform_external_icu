@@ -156,7 +156,7 @@ public:
     * @return         true if "other" is the same as "this"
     * @stable ICU 2.0
     */
-    UBool operator==(const CollationElementIterator& other) const;
+    bool operator==(const CollationElementIterator& other) const;
 
     /**
     * Returns true if "other" is not the same as "this".
@@ -165,7 +165,7 @@ public:
     * @return         true if "other" is not the same as "this"
     * @stable ICU 2.0
     */
-    UBool operator!=(const CollationElementIterator& other) const;
+    bool operator!=(const CollationElementIterator& other) const;
 
     /**
     * Resets the cursor to the beginning of the string.
@@ -253,7 +253,7 @@ public:
     /**
     * Checks if a comparison order is ignorable.
     * @param order the collation order.
-    * @return TRUE if a character is ignorable, FALSE otherwise.
+    * @return true if a character is ignorable, false otherwise.
     * @stable ICU 2.0
     */
     static inline UBool isIgnorable(int32_t order);

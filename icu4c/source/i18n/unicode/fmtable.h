@@ -179,18 +179,18 @@ public:
     /**
      * Equality comparison.
      * @param other    the object to be compared with.
-     * @return        TRUE if other are equal to this, FALSE otherwise.
+     * @return        true if other are equal to this, false otherwise.
      * @stable ICU 2.0
      */
-    UBool          operator==(const Formattable &other) const;
+    bool           operator==(const Formattable &other) const;
 
     /**
      * Equality operator.
      * @param other    the object to be compared with.
-     * @return        TRUE if other are unequal to this, FALSE otherwise.
+     * @return        true if other are unequal to this, false otherwise.
      * @stable ICU 2.0
      */
-    UBool          operator!=(const Formattable& other) const
+    bool           operator!=(const Formattable& other) const
       { return !operator==(other); }
 
     /**
@@ -277,9 +277,9 @@ public:
     Type            getType(void) const;
 
     /**
-     * Returns TRUE if the data type of this Formattable object
+     * Returns true if the data type of this Formattable object
      * is kDouble, kLong, or kInt64
-     * @return TRUE if this is a pure numeric object
+     * @return true if this is a pure numeric object
      * @stable ICU 3.0
      */
     UBool           isNumeric() const;

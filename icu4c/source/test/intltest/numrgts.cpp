@@ -975,20 +975,20 @@ void NumberFormatRegressionTest::Test4071005 (void)
     UnicodeString tempString;
     /* User error :
     String expectedDefault = "-5\u00a0789,987";
-    String expectedCurrency = "5\u00a0789,98\u00a0$";
+    String expectedCurrency = "5\u00a0789,98\u00a0$\u00a0CA";
     String expectedPercent = "-578\u00a0998%";
     */
     UChar chars1 [] = {
         0x2d, 0x35, 0x00a0, 0x37, 0x38, 0x39, 0x2c, 0x39, 0x38, 0x38
     };
     UChar chars2 [] = {
-        0x35, 0x00a0, 0x37, 0x38, 0x39, 0x2c, 0x39, 0x39, 0x00a0, 0x24
+        0x35, 0x00a0, 0x37, 0x38, 0x39, 0x2c, 0x39, 0x39, 0x00a0, 0x24, 0x00a0, 0x43, 0x41
     };
     UChar chars3 [] = {
         0x2d, 0x35, 0x37, 0x38, 0x00a0, 0x39, 0x39, 0x39, 0x00a0, 0x25
     };
     UnicodeString expectedDefault(chars1, 10, 10);
-    UnicodeString expectedCurrency(chars2, 10, 10);
+    UnicodeString expectedCurrency(chars2, 13, 13);
     UnicodeString expectedPercent(chars3, 10, 10);
 
     UErrorCode status = U_ZERO_ERROR;
@@ -1474,7 +1474,7 @@ void NumberFormatRegressionTest::Test4106658(void)
 #if U_PLATFORM == U_PF_HPUX
     d1 = 0.0 * -1.0;    // old HPUX compiler ignores volatile keyword
 #else
-    d1 *= -1.0; // Some compilers have a problem with defining -0.0
+    d1 = d1 * -1.0; // Some compilers have a problem with defining -0.0
 #endif
     logln("pattern: \"" + df->toPattern(temp) + "\"");
     df->format(d1, buffer, pos);
@@ -1605,7 +1605,7 @@ void NumberFormatRegressionTest::Test4106667(void)
 #if U_PLATFORM == U_PF_HPUX
     d = 0.0 * -1.0;    // old HPUX compiler ignores volatile keyword
 #else
-    d *= -1.0; // Some compilers have a problem with defining -0.0
+    d = d * -1.0; // Some compilers have a problem with defining -0.0
 #endif
     df->setPositivePrefix(/*"+"*/bar);
     df->format(d, buffer, pos);
@@ -2056,7 +2056,7 @@ void NumberFormatRegressionTest::Test4147706(void)
 #if U_PLATFORM == U_PF_HPUX
         d1 = 0.0 * -1.0;    // old HPUX compiler ignores volatile keyword
 #else
-        d1 *= -1.0; // Some compilers have a problem with defining -0.0
+        d1 = d1 * -1.0; // Some compilers have a problem with defining -0.0
 #endif
         df->adoptDecimalFormatSymbols(syms);
         f1 = df->format(d1, f1, pos);
